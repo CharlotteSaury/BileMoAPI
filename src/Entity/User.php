@@ -19,14 +19,14 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Expose
-     * @Groups({"show_customer"})
+     * @Groups({"customer"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Expose
-     * @Groups({"show_customer"})
+     * @Groups({"customer"})
      */
     private $email;
 

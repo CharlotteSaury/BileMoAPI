@@ -19,7 +19,7 @@ class Client extends User
     /**
      * @ORM\Column(type="string", length=255)
      * @Expose
-     * @Groups({"show_customer"})
+     * @Groups({"customer"})
      */
     private $company;
 

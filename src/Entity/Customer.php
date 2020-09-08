@@ -19,35 +19,35 @@ class Customer
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Expose
-     * @Groups({"show_customer"})
+     * @Groups({"customer"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Expose
-     * @Groups({"show_customer"})
+     * @Groups({"customer"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Expose
-     * @Groups({"show_customer"})
+     * @Groups({"customer"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Expose
-     * @Groups({"show_customer"})
+     * @Groups({"customer"})
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="datetime")
      * @Expose
-     * @Groups({"show_customer"})
+     * @Groups({"customer"})
      */
     private $createdAt;
 
@@ -55,7 +55,7 @@ class Customer
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="customers", cascade={"all"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      * @Expose
-     * @Groups({"show_customer"})
+     * @Groups({"customer"})
      */
     private $client;
 
