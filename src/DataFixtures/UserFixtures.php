@@ -6,6 +6,7 @@ use Faker\Factory;
 use App\Entity\User;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture
 {
@@ -14,7 +15,7 @@ class UserFixtures extends Fixture
         $faker = \Faker\Factory::create('fr_FR');
 
         $admin = new User();
-        $admin->setEmail($faker->email)
+        $admin->setEmail('admin@bilemo.com')
             ->setCreatedAt($faker->dateTime())
             ->setPassword($faker->password)
             ->setRoles(['ROLE_ADMIN']);

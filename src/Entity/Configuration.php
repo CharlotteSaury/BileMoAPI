@@ -41,7 +41,7 @@ class Configuration
     private $phone;
 
     /**
-     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="configuration", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="configuration", orphanRemoval=true, cascade={"persist"})
      */
     private $images;
 
