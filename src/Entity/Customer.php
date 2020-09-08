@@ -4,9 +4,13 @@ namespace App\Entity;
 
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
+ * @ExclusionPolicy("all")
  */
 class Customer
 {
@@ -14,32 +18,44 @@ class Customer
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Expose
+     * @Groups({"show_customer"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Expose
+     * @Groups({"show_customer"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Expose
+     * @Groups({"show_customer"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Expose
+     * @Groups({"show_customer"})
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Expose
+     * @Groups({"show_customer"})
      */
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="customers")
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="customers", cascade={"all"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
+     * @Expose
+     * @Groups({"show_customer"})
      */
     private $client;
 
