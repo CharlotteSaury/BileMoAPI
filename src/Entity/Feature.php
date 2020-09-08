@@ -2,13 +2,17 @@
 
 namespace App\Entity;
 
-use App\Repository\FeatureRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\FeatureRepository;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
+use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=FeatureRepository::class)
+ * @ExclusionPolicy("all")
  */
 class Feature
 {
@@ -21,6 +25,8 @@ class Feature
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Expose
+     * @Groups({"product"})
      */
     private $name;
 

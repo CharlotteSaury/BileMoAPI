@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Customer;
+use App\Entity\Product;
 use App\Repository\ProductRepository;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
@@ -29,9 +29,9 @@ class ProductController extends AbstractFOSRestController
      *      serializerGroups={"product"}
      * )
      */
-    public function showAction(Customer $customer)
+    public function showAction(Product $product)
     {
-        return $customer;
+        return $product;
     }
 
     /**

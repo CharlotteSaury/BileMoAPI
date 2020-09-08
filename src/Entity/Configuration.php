@@ -2,13 +2,17 @@
 
 namespace App\Entity;
 
-use App\Repository\ConfigurationRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
+use App\Repository\ConfigurationRepository;
+use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=ConfigurationRepository::class)
+ * @ExclusionPolicy("all")
  */
 class Configuration
 {
@@ -21,16 +25,22 @@ class Configuration
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Expose
+     * @Groups({"product"})
      */
     private $memory;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Expose
+     * @Groups({"product"})
      */
     private $color;
 
     /**
      * @ORM\Column(type="float")
+     * @Expose
+     * @Groups({"product"})
      */
     private $price;
 
@@ -42,6 +52,8 @@ class Configuration
 
     /**
      * @ORM\OneToMany(targetEntity=Image::class, mappedBy="configuration", orphanRemoval=true, cascade={"persist"})
+     * @Expose
+     * @Groups({"product"})
      */
     private $images;
 

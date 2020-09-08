@@ -2,11 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ImageRepository;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
+ * @ExclusionPolicy("all")
  */
 class Image
 {
@@ -19,6 +23,8 @@ class Image
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Expose
+     * @Groups({"product"})
      */
     private $url;
 
