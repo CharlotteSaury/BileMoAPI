@@ -13,18 +13,21 @@ use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ClientRepository::class)
+ * @ExclusionPolicy("all")
  */
 class Client extends User
 {
     /**
      * @ORM\Column(type="string", length=255)
      * @Expose
-     * @Groups({"customer"})
+     * @Groups({"customer", "client"})
      */
     private $company;
 
     /**
      * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="client", orphanRemoval=true)
+     * @Expose
+     * @Groups({"client"})
      */
     private $customers;
 

@@ -19,35 +19,35 @@ class Customer
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Expose
-     * @Groups({"customer"})
+     * @Groups({"customer", "client"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Expose
-     * @Groups({"customer"})
+     * @Groups({"customer", "client"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Expose
-     * @Groups({"customer"})
+     * @Groups({"customer", "client"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Expose
-     * @Groups({"customer"})
+     * @Groups({"customer", "client"})
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="datetime")
      * @Expose
-     * @Groups({"customer"})
+     * @Groups({"customer", "client"})
      */
     private $createdAt;
 

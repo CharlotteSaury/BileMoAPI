@@ -11,6 +11,7 @@ use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ExclusionPolicy("all")
  */
 class User implements UserInterface
 {
@@ -19,14 +20,14 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Expose
-     * @Groups({"customer"})
+     * @Groups({"customer", "client"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Expose
-     * @Groups({"customer"})
+     * @Groups({"customer", "client"})
      */
     private $email;
 
@@ -37,6 +38,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="datetime")
+     * @Expose
+     * @Groups({"client"})
      */
     private $createdAt;
 
