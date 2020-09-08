@@ -5,8 +5,7 @@ namespace App\DataFixtures;
 use Faker\Factory;
 use App\Entity\Image;
 use App\Entity\Configuration;
-use App\DataFixtures\PhoneFixtures;
-use App\Repository\PhoneRepository;
+use App\DataFixtures\ProductFixtures;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -28,7 +27,7 @@ class ConfigurationFixtures extends Fixture implements DependentFixtureInterface
             $config->setMemory($memory[mt_rand(0, 3)])
                 ->setColor($faker->safeColorName)
                 ->setPrice($faker->randomFloat(2, 800, 1500))
-                ->setPhone($this->getReference('phone' . mt_rand(0, 49)));
+                ->setProduct($this->getReference('product' . mt_rand(0, 49)));
 
                 for ($j = 0; $j < mt_rand(0,4); $j++) {
                     $image = new Image();
@@ -44,7 +43,7 @@ class ConfigurationFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-            PhoneFixtures::class,
+            ProductFixtures::class,
         ];
     }
 }

@@ -35,10 +35,10 @@ class Configuration
     private $price;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Phone::class, inversedBy="configurations")
+     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="configurations")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $phone;
+    private $product;
 
     /**
      * @ORM\OneToMany(targetEntity=Image::class, mappedBy="configuration", orphanRemoval=true, cascade={"persist"})
@@ -91,14 +91,14 @@ class Configuration
         return $this;
     }
 
-    public function getPhone(): ?Phone
+    public function getProduct(): ?Product
     {
-        return $this->phone;
+        return $this->product;
     }
 
-    public function setPhone(?Phone $phone): self
+    public function setProduct(?Product $product): self
     {
-        $this->phone = $phone;
+        $this->product = $product;
 
         return $this;
     }

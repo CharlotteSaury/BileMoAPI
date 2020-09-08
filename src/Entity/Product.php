@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\PhoneRepository;
+use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=PhoneRepository::class)
+ * @ORM\Entity(repositoryClass=ProductRepository::class)
  */
-class Phone
+class Product
 {
     /**
      * @ORM\Id
@@ -60,18 +60,18 @@ class Phone
     private $weight;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Feature::class, inversedBy="phones")
+     * @ORM\ManyToMany(targetEntity=Feature::class, inversedBy="products")
      */
     private $features;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Manufacturer::class, inversedBy="phones")
+     * @ORM\ManyToOne(targetEntity=Manufacturer::class, inversedBy="products")
      * @ORM\JoinColumn(nullable=false)
      */
     private $manufacturer;
 
     /**
-     * @ORM\OneToMany(targetEntity=Configuration::class, mappedBy="phone", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Configuration::class, mappedBy="product", orphanRemoval=true)
      */
     private $configurations;
 
@@ -232,7 +232,7 @@ class Phone
     {
         if (!$this->configurations->contains($configuration)) {
             $this->configurations[] = $configuration;
-            $configuration->setPhone($this);
+            $configuration->setProduct($this);
         }
 
         return $this;
@@ -243,8 +243,8 @@ class Phone
         if ($this->configurations->contains($configuration)) {
             $this->configurations->removeElement($configuration);
             // set the owning side to null (unless already changed)
-            if ($configuration->getPhone() === $this) {
-                $configuration->setPhone(null);
+            if ($configuration->getProduct() === $this) {
+                $configuration->setProduct(null);
             }
         }
 

@@ -25,13 +25,13 @@ class Manufacturer
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Phone::class, mappedBy="manufacturer", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="manufacturer", orphanRemoval=true)
      */
-    private $phones;
+    private $products;
 
     public function __construct()
     {
-        $this->phones = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -52,30 +52,30 @@ class Manufacturer
     }
 
     /**
-     * @return Collection|Phone[]
+     * @return Collection|Product[]
      */
-    public function getPhones(): Collection
+    public function getProducts(): Collection
     {
-        return $this->phones;
+        return $this->products;
     }
 
-    public function addPhone(Phone $phone): self
+    public function addProduct(Product $product): self
     {
-        if (!$this->phones->contains($phone)) {
-            $this->phones[] = $phone;
-            $phone->setManufacturer($this);
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setManufacturer($this);
         }
 
         return $this;
     }
 
-    public function removePhone(Phone $phone): self
+    public function removeProduct(Product $product): self
     {
-        if ($this->phones->contains($phone)) {
-            $this->phones->removeElement($phone);
+        if ($this->products->contains($product)) {
+            $this->products->removeElement($product);
             // set the owning side to null (unless already changed)
-            if ($phone->getManufacturer() === $this) {
-                $phone->setManufacturer(null);
+            if ($product->getManufacturer() === $this) {
+                $product->setManufacturer(null);
             }
         }
 

@@ -25,13 +25,13 @@ class Feature
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Phone::class, mappedBy="features")
+     * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="features")
      */
-    private $phones;
+    private $products;
 
     public function __construct()
     {
-        $this->phones = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -52,28 +52,28 @@ class Feature
     }
 
     /**
-     * @return Collection|Phone[]
+     * @return Collection|Product[]
      */
-    public function getPhones(): Collection
+    public function getProducts(): Collection
     {
-        return $this->phones;
+        return $this->products;
     }
 
-    public function addPhone(Phone $phone): self
+    public function addProduct(Product $product): self
     {
-        if (!$this->phones->contains($phone)) {
-            $this->phones[] = $phone;
-            $phone->addFeature($this);
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->addFeature($this);
         }
 
         return $this;
     }
 
-    public function removePhone(Phone $phone): self
+    public function removeProduct(Product $product): self
     {
-        if ($this->phones->contains($phone)) {
-            $this->phones->removeElement($phone);
-            $phone->removeFeature($this);
+        if ($this->products->contains($product)) {
+            $this->products->removeElement($product);
+            $product->removeFeature($this);
         }
 
         return $this;

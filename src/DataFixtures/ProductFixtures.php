@@ -2,13 +2,13 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Phone;
+use App\Entity\Product;
 use Faker\Factory;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class PhoneFixtures extends Fixture implements DependentFixtureInterface 
+class ProductFixtures extends Fixture implements DependentFixtureInterface 
 {
     public function load(ObjectManager $manager)
     {
@@ -16,8 +16,8 @@ class PhoneFixtures extends Fixture implements DependentFixtureInterface
         $date = $faker->DateTime();
 
         for ($i = 0; $i < 50; $i++) {
-            $phone = new Phone();
-            $phone->setName($faker->word)
+            $product = new Product();
+            $product->setName($faker->word)
                 ->setDescription($faker->paragraph)
                 ->setCreatedAt($date)
                 ->setUpdatedAt($date)
@@ -27,11 +27,11 @@ class PhoneFixtures extends Fixture implements DependentFixtureInterface
                 ->setWeight($faker->randomFloat(1, 150, 250))
                 ->setManufacturer($this->getReference('manufacturer'.mt_rand(0,14)));
             for ($j = 0; $j < mt_rand(0,5); $j++) {
-                $phone->addFeature($this->getReference('feature'.mt_rand(0, 10)));
+                $product->addFeature($this->getReference('feature'.mt_rand(0, 10)));
             }
             
-            $manager->persist($phone);
-            $this->addReference('phone'.$i, $phone);
+            $manager->persist($product);
+            $this->addReference('product'.$i, $product);
             $manager->flush();
         }
         
