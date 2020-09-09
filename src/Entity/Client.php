@@ -45,7 +45,7 @@ class Client implements UserInterface
     private $createdAt;
 
     /**
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="json")
      */
     private $roles = [];
 
@@ -66,6 +66,7 @@ class Client implements UserInterface
     public function __construct()
     {
         $this->customers = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -116,7 +117,9 @@ class Client implements UserInterface
 
     public function getRoles(): ?array
     {
-        return $this->roles;
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+        return array_unique($roles);
     }
 
     public function setRoles(array $roles): self

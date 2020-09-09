@@ -1,7 +1,10 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        users_in_memory: { memory: null }
+        from_database:
+            entity:
+                class: App\Entity\Client
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -9,7 +12,7 @@ security:
         main:
             anonymous: true
             lazy: true
-            provider: users_in_memory
+            provider: from_database
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -21,4 +24,9 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/, roles: ROLE_USER }
+
+    encoders:
+        entity: 
+            class: App\Entity\Client
+            algorithm: auto
