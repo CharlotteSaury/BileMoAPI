@@ -97,7 +97,7 @@ class ClientController extends AbstractFOSRestController
             return $this->authorizationHandler->forbiddenResponse('add', 'client');
         }
 
-        //$client->setRoles(['ROLE_USER']);
+        $client->setRoles(['ROLE_USER']);
         $client->setCreatedAt(new DateTime());
         $hashedPassword = $encoder->encodePassword($client, $client->getPassword());
         $client->setPassword($hashedPassword);
