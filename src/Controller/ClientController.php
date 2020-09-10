@@ -54,7 +54,7 @@ class ClientController extends AbstractFOSRestController
      */
     public function showAction(Client $client)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
+        if (!$this->isGranted('MANAGE', $client)) {
             return $this->authorizationHandler->forbiddenResponse('see', 'client');
         }
 
@@ -144,10 +144,8 @@ class ClientController extends AbstractFOSRestController
      */
     public function updateAction(Client $client, Request $request, UserPasswordEncoderInterface $encoder)
     {
-        if ($client != $this->getUser()) {
-            if (!$this->isGranted('ROLE_ADMIN')) {
-                return $this->authorizationHandler->forbiddenResponse('edit', 'client');
-            }
+        if (!$this->isGranted('MANAGE', $client)) {
+            return $this->authorizationHandler->forbiddenResponse('edit', 'client');
         }
 
         $data = json_decode($request->getContent());
