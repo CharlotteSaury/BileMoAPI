@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ClientRepository;
+use DateTime;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -34,6 +35,7 @@ class Client implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Expose
      */
     private $password;
 
@@ -46,6 +48,8 @@ class Client implements UserInterface
 
     /**
      * @ORM\Column(type="json")
+     * @Expose
+     * @Groups({"client"})
      */
     private $roles = [];
 
@@ -66,6 +70,7 @@ class Client implements UserInterface
     public function __construct()
     {
         $this->customers = new ArrayCollection();
+        $this->createdAt = new DateTime();
 
     }
 
