@@ -52,7 +52,7 @@ class Customer
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="customers", cascade={"all"}, fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="customers", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      * @Expose
      * @Groups({"customer"})

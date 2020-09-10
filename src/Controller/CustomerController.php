@@ -83,4 +83,20 @@ class CustomerController extends AbstractFOSRestController
             ['Location' => $this->generateUrl('app_customers_show', ['id' => $customer->getId(), UrlGeneratorInterface::ABSOLUTE_URL])]
         );
     }
+
+    /**
+     * @Rest\Delete(
+     *      path = "/api/customers/{id}",
+     *      name = "app_customers_delete"
+     * )
+     * @Rest\View(
+     *      StatusCode = 204
+     * )
+     */
+    public function deleteAction(Customer $customer) 
+    {
+        $this->entityManager->remove($customer);
+        $this->entityManager->flush();
+        return new Response('', Response::HTTP_NO_CONTENT);
+    }
 }
