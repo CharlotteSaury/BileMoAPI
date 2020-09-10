@@ -22,7 +22,7 @@ class CustomerController extends AbstractFOSRestController
 
     /**
      * @Rest\Get(
-     *      path = "/customers/{id}",
+     *      path = "/api/customers/{id}",
      *      name = "app_customers_show",
      *      requirements = {"id" = "\d+"}
      * )
@@ -37,7 +37,7 @@ class CustomerController extends AbstractFOSRestController
 
     /**
      * @Rest\Get(
-     *      path = "/customers",
+     *      path = "/api/customers",
      *      name = "app_customers_list"
      * )
      * @Rest\View(

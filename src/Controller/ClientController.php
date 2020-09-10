@@ -23,7 +23,7 @@ class ClientController extends AbstractFOSRestController
 
     /**
      * @Rest\Get(
-     *      path = "/clients/{id}",
+     *      path = "/api/clients/{id}",
      *      name = "app_clients_show",
      *      requirements = {"id" = "\d+"}
      * )
@@ -38,7 +38,7 @@ class ClientController extends AbstractFOSRestController
 
     /**
      * @Rest\Get(
-     *      path = "/clients",
+     *      path = "/api/clients",
      *      name = "app_clients_list"
      * )
      * @Rest\View(

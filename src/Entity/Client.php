@@ -142,9 +142,9 @@ class Client implements UserInterface
     }
 
     /**
-     * @return Collection|Customer[]
+     * @return ArrayCollection|Customer[]
      */
-    public function getCustomers(): Collection
+    public function getCustomers(): ArrayCollection
     {
         return $this->customers;
     }
