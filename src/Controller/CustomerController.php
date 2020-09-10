@@ -5,13 +5,14 @@ namespace App\Controller;
 use App\Entity\Customer;
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Handler\AuthorizationJsonHandler;
 use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CustomerController extends AbstractFOSRestController
 {
@@ -25,10 +26,16 @@ class CustomerController extends AbstractFOSRestController
      */
     private $entityManager;
 
-    public function __construct(CustomerRepository $customerRepository, EntityManagerInterface $entityManager)
+    /**
+     * @var AuthorizationJsonHandler
+     */
+    private $authorizationHandler;
+
+    public function __construct(CustomerRepository $customerRepository, EntityManagerInterface $entityManager, AuthorizationJsonHandler $authorizationHandler)
     {
         $this->customerRepository = $customerRepository;
         $this->entityManager = $entityManager;
+        $this->authorizationHandler = $authorizationHandler;
     }
 
     /**
@@ -44,11 +51,7 @@ class CustomerController extends AbstractFOSRestController
     public function showAction(Customer $customer)
     {
         if (!$this->isGranted('MANAGE', $customer)) {
-            return new JsonResponse([
-                'code' => 403,
-                'message' => 'Your are not authorized to access to this customer.'
-            ],
-            Response::HTTP_FORBIDDEN);
+            return $this->authorizationHandler->forbiddenResponse('see', 'client');
         }
         return $customer;
     }
@@ -105,11 +108,7 @@ class CustomerController extends AbstractFOSRestController
     public function deleteAction(Customer $customer) 
     {
         if (!$this->isGranted('MANAGE', $customer)) {
-            return new JsonResponse([
-                'code' => 403,
-                'message' => 'Your are not authorized to delete this customer.'
-            ],
-            Response::HTTP_FORBIDDEN);
+            return $this->authorizationHandler->forbiddenResponse('delete', 'customer');
         }
 
         $this->entityManager->remove($customer);

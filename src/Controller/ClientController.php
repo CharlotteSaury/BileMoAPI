@@ -32,7 +32,7 @@ class ClientController extends AbstractFOSRestController
     /**
      * @var AuthorizationJsonHandler
      */
-    private $authorizationHander;
+    private $authorizationHandler;
 
     public function __construct(ClientRepository $clientRepository, EntityManagerInterface $entityManager, AuthorizationJsonHandler $authorizationHandler)
     {
