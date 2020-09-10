@@ -21,14 +21,14 @@ class Client implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Expose
-     * @Groups({"customer", "client"})
+     * @Groups({"client"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Expose
-     * @Groups({"customer", "client"})
+     * @Groups({"client"})
      */
     private $email;
 

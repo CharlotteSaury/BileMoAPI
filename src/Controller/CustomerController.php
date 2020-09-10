@@ -44,9 +44,9 @@ class CustomerController extends AbstractFOSRestController
      *      serializerGroups={"customer"}
      * )
      */
-    public function listCustomers()
+    public function listAction()
     {
-        $customers = $this->customerRepository->findAll();
+        $customers = $this->customerRepository->findBy(['client' => $this->getUser()]);
         return $customers;
     }
 }
