@@ -11,6 +11,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CustomerController extends AbstractFOSRestController
 {
@@ -42,6 +43,13 @@ class CustomerController extends AbstractFOSRestController
      */
     public function showAction(Customer $customer)
     {
+        if (!$this->isGranted('MANAGE', $customer)) {
+            return new JsonResponse([
+                'code' => 403,
+                'message' => 'Your are not authorized to access to this customer.'
+            ],
+            Response::HTTP_FORBIDDEN);
+        }
         return $customer;
     }
 
@@ -87,7 +95,8 @@ class CustomerController extends AbstractFOSRestController
     /**
      * @Rest\Delete(
      *      path = "/api/customers/{id}",
-     *      name = "app_customers_delete"
+     *      name = "app_customers_delete",
+     *      requirements = {"id" = "\d+"}
      * )
      * @Rest\View(
      *      StatusCode = 204
@@ -95,6 +104,14 @@ class CustomerController extends AbstractFOSRestController
      */
     public function deleteAction(Customer $customer) 
     {
+        if (!$this->isGranted('MANAGE', $customer)) {
+            return new JsonResponse([
+                'code' => 403,
+                'message' => 'Your are not authorized to delete this customer.'
+            ],
+            Response::HTTP_FORBIDDEN);
+        }
+
         $this->entityManager->remove($customer);
         $this->entityManager->flush();
         return new Response('', Response::HTTP_NO_CONTENT);
