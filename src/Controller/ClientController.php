@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Handler\AuthorizationJsonHandler;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -96,7 +97,7 @@ class ClientController extends AbstractFOSRestController
             return $this->authorizationHandler->forbiddenResponse('add', 'client');
         }
 
-        $client->setRoles(['ROLE_USER']);
+        //$client->setRoles(['ROLE_USER']);
         $client->setCreatedAt(new DateTime());
         $hashedPassword = $encoder->encodePassword($client, $client->getPassword());
         $client->setPassword($hashedPassword);
@@ -105,7 +106,7 @@ class ClientController extends AbstractFOSRestController
 
         return $this->view(
             $client,
-            Response::HTTP_CREATED, 
+            Response::HTTP_CREATED,
             ['Location' => $this->generateUrl('app_clients_show', ['id' => $client->getId(), UrlGeneratorInterface::ABSOLUTE_URL])]
         );
     }
@@ -120,7 +121,7 @@ class ClientController extends AbstractFOSRestController
      *      StatusCode = 204
      * )
      */
-    public function deleteAction(Client $client) 
+    public function deleteAction(Client $client)
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->authorizationHandler->forbiddenResponse('delete', 'client');
@@ -129,5 +130,47 @@ class ClientController extends AbstractFOSRestController
         $this->entityManager->remove($client);
         $this->entityManager->flush();
         return new Response('', Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @Rest\Put(
+     *      path = "/api/clients/{id}",
+     *      name = "app_clients_update",
+     *      requirements = {"id" = "\d+"}
+     * )
+     * @Rest\View(
+     *      StatusCode = 200
+     * )
+     */
+    public function updateAction(Client $client, Request $request, UserPasswordEncoderInterface $encoder)
+    {
+        if ($client != $this->getUser()) {
+            if (!$this->isGranted('ROLE_ADMIN')) {
+                return $this->authorizationHandler->forbiddenResponse('edit', 'client');
+            }
+        }
+
+        $data = json_decode($request->getContent());
+
+        foreach ($data as $key => $value) {
+            if ($key && !empty($value)) {
+                if ($key == 'password') {
+                    if ($this->getUser() != $client) {
+                        return $this->authorizationHandler->forbiddenResponse('password');
+                    } else {
+                        $hashedPassword = $encoder->encodePassword($client, $value);
+                        $client->setPassword($hashedPassword);
+                    }
+                } elseif (in_array($key, ['email', 'company'])) {
+                    $setter = 'set'.ucfirst($key);
+                    $client->$setter($value);
+                } else {
+                    return $this->authorizationHandler->forbiddenResponse('update', 'client', $key);
+                }
+            }
+        }
+        $this->entityManager->flush();
+
+        return $client;
     }
 }

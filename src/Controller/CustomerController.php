@@ -115,4 +115,5 @@ class CustomerController extends AbstractFOSRestController
         $this->entityManager->flush();
         return new Response('', Response::HTTP_NO_CONTENT);
     }
+
 }
