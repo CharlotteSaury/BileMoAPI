@@ -139,23 +139,21 @@ class Product
     private $nfc;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Manufacturer::class, inversedBy="products", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
-     * @Expose
-     * @Groups({"product"})
-     */
-    private $manufacturer;
-
-    /**
      * @ORM\OneToMany(targetEntity=Configuration::class, mappedBy="product", orphanRemoval=true, cascade={"persist"})
      * @Expose
      * @Groups({"product"})
      */
     private $configurations;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Expose
+     * @Groups({"product"})
+     */
+    private $manufacturer;
+
     public function __construct()
     {
-        $this->features = new ArrayCollection();
         $this->configurations = new ArrayCollection();
         $this->createdAt = new DateTime();
     }
@@ -357,18 +355,6 @@ class Product
         return $this;
     }
 
-    public function getManufacturer(): ?Manufacturer
-    {
-        return $this->manufacturer;
-    }
-
-    public function setManufacturer(?Manufacturer $manufacturer): self
-    {
-        $this->manufacturer = $manufacturer;
-
-        return $this;
-    }
-
     /**
      * @return ArrayCollection|Configuration[]
      */
@@ -396,6 +382,18 @@ class Product
                 $configuration->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getManufacturer(): ?string
+    {
+        return $this->manufacturer;
+    }
+
+    public function setManufacturer(string $manufacturer): self
+    {
+        $this->manufacturer = $manufacturer;
 
         return $this;
     }

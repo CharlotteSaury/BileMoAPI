@@ -8,9 +8,8 @@ use App\Entity\Product;
 use App\Entity\Configuration;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class ProductFixtures extends Fixture implements DependentFixtureInterface 
+class ProductFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
@@ -32,6 +31,24 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
             'Nfc'
         ];
 
+        $manufacturers = [
+            'Huawei',
+            'Wiko',
+            'Alcatel',
+            'Apple',
+            'Samsung',
+            'Nokia',
+            'Motorola',
+            'Sony',
+            'BlackBerry',
+            'Google',
+            'LG',
+            'HTC',
+            'Honor',
+            'Xiaomi',
+            'Asus',
+        ];
+
         for ($i = 0; $i < 50; $i++) {
             $product = new Product();
             $product->setName($faker->word)
@@ -44,7 +61,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 ->setScreen($faker->randomFloat(1,4,7))
                 ->setDas($faker->randomFloat(3, 0.1, 1))
                 ->setWeight($faker->randomFloat(1, 150, 250))
-                ->setManufacturer($this->getReference('manufacturer'.mt_rand(0,14)));
+                ->setManufacturer($manufacturers[mt_rand(0, count($manufacturers)-1)]);
             
             foreach ($features as $feature) {
                 $setter = 'set'.$feature;
@@ -69,13 +86,5 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
             $this->addReference('product'.$i, $product);
             $manager->flush();
         }
-        
-    }
-
-    public function getDependencies() 
-    {
-        return [
-            ManufacturerFixtures::class
-        ];
     }
 }
