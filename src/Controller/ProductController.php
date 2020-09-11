@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use DateTime;
 use App\Entity\Product;
+use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Handler\AuthorizationJsonHandler;
@@ -106,16 +107,22 @@ class ProductController extends AbstractFOSRestController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->authorizationHandler->forbiddenResponse('add', 'product');
         }
-
+        
         $product->setCreatedAt(new DateTime());
-        $product->setUpdatedAt($product->getCreatedAt());
         $this->entityManager->persist($product);
+        foreach ($product->getConfigurations() as $config) {
+            $config->setProduct($product);
+            foreach ($config->getImages() as $image) {
+                $image->setConfiguration($config);
+            }
+        }
+        
         $this->entityManager->flush();
 
         return $this->view(
             $product,
             Response::HTTP_CREATED,
-            ['Location' => $this->generateUrl('app_products_show', ['id' => $product->getId(), UrlGeneratorInterface::ABSOLUTE_URL])]
+            ['Location' => $this->generateUrl('app_products_show', ['id' => $product->getId()], UrlGeneratorInterface::ABSOLUTE_URL)]
         );
     }
 }

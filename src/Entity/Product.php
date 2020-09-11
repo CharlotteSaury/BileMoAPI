@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProductRepository;
+use DateTime;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\Collection;
@@ -76,46 +77,64 @@ class Product
 
     /**
      * @ORM\Column(type="float")
+     * @Expose
+     * @Groups({"product"})
      */
     private $length;
 
     /**
      * @ORM\Column(type="float")
+     * @Expose
+     * @Groups({"product"})
      */
     private $width;
 
     /**
      * @ORM\Column(type="float")
+     * @Expose
+     * @Groups({"product"})
      */
     private $height;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Expose
+     * @Groups({"product"})
      */
     private $wifi;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Expose
+     * @Groups({"product"})
      */
     private $video4k;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Expose
+     * @Groups({"product"})
      */
     private $bluetooth;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Expose
+     * @Groups({"product"})
      */
     private $lte4G;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Expose
+     * @Groups({"product"})
      */
     private $camera;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Expose
+     * @Groups({"product"})
      */
     private $nfc;
 
@@ -138,6 +157,7 @@ class Product
     {
         $this->features = new ArrayCollection();
         $this->configurations = new ArrayCollection();
+        $this->createdAt = new DateTime();
     }
 
     public function getId(): ?int

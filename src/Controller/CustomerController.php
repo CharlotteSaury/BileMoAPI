@@ -92,7 +92,7 @@ class CustomerController extends AbstractFOSRestController
         return $this->view(
             $customer,
             Response::HTTP_CREATED,
-            ['Location' => $this->generateUrl('app_customers_show', ['id' => $customer->getId(), UrlGeneratorInterface::ABSOLUTE_URL])]
+            ['Location' => $this->generateUrl('app_customers_show', ['id' => $customer->getId()], UrlGeneratorInterface::ABSOLUTE_URL)]
         );
     }
 

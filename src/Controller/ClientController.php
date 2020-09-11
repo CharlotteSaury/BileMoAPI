@@ -107,7 +107,7 @@ class ClientController extends AbstractFOSRestController
         return $this->view(
             $client,
             Response::HTTP_CREATED,
-            ['Location' => $this->generateUrl('app_clients_show', ['id' => $client->getId(), UrlGeneratorInterface::ABSOLUTE_URL])]
+            ['Location' => $this->generateUrl('app_clients_show', ['id' => $client->getId()], UrlGeneratorInterface::ABSOLUTE_URL)]
         );
     }
 
