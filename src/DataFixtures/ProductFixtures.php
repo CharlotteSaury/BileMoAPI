@@ -23,20 +23,34 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
             '256 Go',
         ];
 
+        $features = [
+            'Wifi',
+            'Video4K',
+            'Bluetooth',
+            'Lte4G',
+            'Camera',
+            'Nfc'
+        ];
+
         for ($i = 0; $i < 50; $i++) {
             $product = new Product();
             $product->setName($faker->word)
                 ->setDescription($faker->paragraph)
                 ->setCreatedAt($date)
                 ->setUpdatedAt($date)
-                ->setDimensions('L'.$faker->randomFloat(2,12,15).' cm x l'.$faker->randomFloat(2,6,10).' cm x H'.$faker->randomFloat(2,0.7,1.5).'cm')
-                ->setScreen($faker->randomFloat(1,4,7).'"')
+                ->setLength($faker->randomFloat(2,12,15))
+                ->setWidth($faker->randomFloat(2,6,10))
+                ->setHeight($faker->randomFloat(2,0.7,1.5))
+                ->setScreen($faker->randomFloat(1,4,7))
                 ->setDas($faker->randomFloat(3, 0.1, 1))
                 ->setWeight($faker->randomFloat(1, 150, 250))
                 ->setManufacturer($this->getReference('manufacturer'.mt_rand(0,14)));
-            for ($j = 0; $j < mt_rand(0,5); $j++) {
-                $product->addFeature($this->getReference('feature'.mt_rand(0, 10)));
+            
+            foreach ($features as $feature) {
+                $setter = 'set'.$feature;
+                $product->$setter((bool)random_int(0,1));
             }
+
             for ($k = 0; $k < mt_rand(1,3); $k++) {
                 $config = new Configuration();
                 $config->setMemory($memory[mt_rand(0, 3)])
@@ -61,8 +75,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies() 
     {
         return [
-            ManufacturerFixtures::class,
-            FeatureFixtures::class,
+            ManufacturerFixtures::class
         ];
     }
 }

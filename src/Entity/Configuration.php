@@ -45,8 +45,10 @@ class Configuration
     private $price;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="configurations")
+     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="configurations", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
+     * @Expose
+     * @Groups({"product"})
      */
     private $product;
 

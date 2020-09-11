@@ -47,21 +47,14 @@ class Product
     private $createdAt;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      * @Expose
      * @Groups({"product"})
      */
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Expose
-     * @Groups({"product"})
-     */
-    private $dimensions;
-
-    /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="float", length=255)
      * @Expose
      * @Groups({"product"})
      */
@@ -82,14 +75,52 @@ class Product
     private $weight;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Feature::class, inversedBy="products")
-     * @Expose
-     * @Groups({"product"})
+     * @ORM\Column(type="float")
      */
-    private $features;
+    private $length;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Manufacturer::class, inversedBy="products")
+     * @ORM\Column(type="float")
+     */
+    private $width;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $height;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $wifi;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $video4k;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $bluetooth;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $lte4G;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $camera;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $nfc;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Manufacturer::class, inversedBy="products", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Expose
      * @Groups({"product"})
@@ -162,18 +193,6 @@ class Product
         return $this;
     }
 
-    public function getDimensions(): ?string
-    {
-        return $this->dimensions;
-    }
-
-    public function setDimensions(string $dimensions): self
-    {
-        $this->dimensions = $dimensions;
-
-        return $this;
-    }
-
     public function getScreen(): ?string
     {
         return $this->screen;
@@ -210,28 +229,110 @@ class Product
         return $this;
     }
 
-    /**
-     * @return Collection|Feature[]
-     */
-    public function getFeatures(): Collection
+    public function getLength(): ?float
     {
-        return $this->features;
+        return $this->length;
     }
 
-    public function addFeature(Feature $feature): self
+    public function setLength(float $length): self
     {
-        if (!$this->features->contains($feature)) {
-            $this->features[] = $feature;
-        }
+        $this->length = $length;
 
         return $this;
     }
 
-    public function removeFeature(Feature $feature): self
+    public function getWidth(): ?float
     {
-        if ($this->features->contains($feature)) {
-            $this->features->removeElement($feature);
-        }
+        return $this->width;
+    }
+
+    public function setWidth(float $width): self
+    {
+        $this->width = $width;
+
+        return $this;
+    }
+
+    public function getHeight(): ?float
+    {
+        return $this->height;
+    }
+
+    public function setHeight(float $height): self
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    public function getWifi(): ?bool
+    {
+        return $this->wifi;
+    }
+
+    public function setWifi(?bool $wifi): self
+    {
+        $this->wifi = $wifi;
+
+        return $this;
+    }
+
+    public function getVideo4k(): ?bool
+    {
+        return $this->video4k;
+    }
+
+    public function setVideo4k(?bool $video4k): self
+    {
+        $this->video4k = $video4k;
+
+        return $this;
+    }
+
+    public function getBluetooth(): ?bool
+    {
+        return $this->bluetooth;
+    }
+
+    public function setBluetooth(?bool $bluetooth): self
+    {
+        $this->bluetooth = $bluetooth;
+
+        return $this;
+    }
+
+    public function getLte4G(): ?bool
+    {
+        return $this->lte4G;
+    }
+
+    public function setLte4G(?bool $lte4G): self
+    {
+        $this->lte4G = $lte4G;
+
+        return $this;
+    }
+
+    public function getCamera(): ?bool
+    {
+        return $this->camera;
+    }
+
+    public function setCamera(?bool $camera): self
+    {
+        $this->camera = $camera;
+
+        return $this;
+    }
+
+    public function getNfc(): ?bool
+    {
+        return $this->nfc;
+    }
+
+    public function setNfc(?bool $nfc): self
+    {
+        $this->nfc = $nfc;
 
         return $this;
     }
@@ -249,9 +350,9 @@ class Product
     }
 
     /**
-     * @return Collection|Configuration[]
+     * @return ArrayCollection|Configuration[]
      */
-    public function getConfigurations(): Collection
+    public function getConfigurations(): ArrayCollection
     {
         return $this->configurations;
     }
