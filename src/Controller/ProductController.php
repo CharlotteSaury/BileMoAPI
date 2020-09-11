@@ -3,9 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Product;
-use App\Handler\AuthorizationJsonHandler;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Handler\AuthorizationJsonHandler;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
@@ -58,7 +59,7 @@ class ProductController extends AbstractFOSRestController
      *      serializerGroups={"product"}
      * )
      */
-    public function listProducts()
+    public function listAction()
     {
         $products = $this->productRepository->findAll();
         return $products;
@@ -71,16 +72,18 @@ class ProductController extends AbstractFOSRestController
      *      requirements = {"id" = "\d+"}
      * )
      * @Rest\View(
-     *      StatusCode = 204
+     *      StatusCode = Response::HTTP_NO_CONTENT
      * )
      */
-    public function deleteAction(Product $product) 
+    public function deleteAction(Request $request)
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->authorizationHandler->forbiddenResponse('delete', 'product');
         }
-        $this->entityManager->remove($product);
-        $this->entityManager->flush();
-        return new Response('', Response::HTTP_NO_CONTENT);
+        $product = $this->productRepository->findOneBy(['id' => $request->get('id')]);
+        if ($product) {
+            $this->entityManager->remove($product);
+            $this->entityManager->flush();
+        }
     }
 }

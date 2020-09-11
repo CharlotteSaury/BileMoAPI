@@ -6,6 +6,7 @@ use App\Entity\Customer;
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Handler\AuthorizationJsonHandler;
+use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -89,8 +90,8 @@ class CustomerController extends AbstractFOSRestController
         $this->entityManager->flush();
 
         return $this->view(
-            $customer, 
-            Response::HTTP_CREATED, 
+            $customer,
+            Response::HTTP_CREATED,
             ['Location' => $this->generateUrl('app_customers_show', ['id' => $customer->getId(), UrlGeneratorInterface::ABSOLUTE_URL])]
         );
     }
@@ -102,18 +103,19 @@ class CustomerController extends AbstractFOSRestController
      *      requirements = {"id" = "\d+"}
      * )
      * @Rest\View(
-     *      StatusCode = 204
+     *      StatusCode = Response::HTTP_NO_CONTENT
      * )
      */
-    public function deleteAction(Customer $customer) 
+    public function deleteAction(Request $request)
     {
-        if (!$this->isGranted('MANAGE', $customer)) {
-            return $this->authorizationHandler->forbiddenResponse('delete', 'customer');
+        $customer = $this->customerRepository->findOneBy(['id' => $request->get('id')]);
+        
+        if ($customer) {
+            if (!$this->isGranted('MANAGE', $customer)) {
+                return $this->authorizationHandler->forbiddenResponse('delete', 'customer');
+            }
+            $this->entityManager->remove($customer);
+            $this->entityManager->flush();
         }
-
-        $this->entityManager->remove($customer);
-        $this->entityManager->flush();
-        return new Response('', Response::HTTP_NO_CONTENT);
     }
-
 }

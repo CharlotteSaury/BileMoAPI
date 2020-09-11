@@ -118,18 +118,19 @@ class ClientController extends AbstractFOSRestController
      *      requirements = {"id" = "\d+"}
      * )
      * @Rest\View(
-     *      StatusCode = 204
+     *      StatusCode = Response::HTTP_NO_CONTENT
      * )
      */
-    public function deleteAction(Client $client)
+    public function deleteAction(Request $request)
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->authorizationHandler->forbiddenResponse('delete', 'client');
         }
-
-        $this->entityManager->remove($client);
-        $this->entityManager->flush();
-        return new Response('', Response::HTTP_NO_CONTENT);
+        $client = $this->clientRepository->findOneBy(['id' => $request->get('id')]);
+        if ($client) {
+            $this->entityManager->remove($client);
+            $this->entityManager->flush();
+        }
     }
 
     /**
@@ -160,7 +161,7 @@ class ClientController extends AbstractFOSRestController
                         $client->setPassword($hashedPassword);
                     }
                 } elseif (in_array($key, ['email', 'company'])) {
-                    $setter = 'set'.ucfirst($key);
+                    $setter = 'set' . ucfirst($key);
                     $client->$setter($value);
                 } else {
                     return $this->authorizationHandler->forbiddenResponse('update', 'client', $key);
