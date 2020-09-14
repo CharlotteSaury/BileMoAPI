@@ -10,9 +10,12 @@ use JMS\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
+ * @UniqueEntity(fields={"name"}, message="This product already exists.")
  * @ExclusionPolicy("all")
  */
 class Product
@@ -28,6 +31,15 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min="2",
+     *      max="50",
+     *      minMessage="Product name must contain at least 2 characters",
+     *      maxMessage="Product name should not contain more than 50 characters"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -35,10 +47,35 @@ class Product
 
     /**
      * @ORM\Column(type="text")
+     * 
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min="6",
+     *      max="3000",
+     *      minMessage="Product description must contain at least 6 characters",
+     *      maxMessage="Product description should not contain more than 3000 characters"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
     private $description;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * 
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min="2",
+     *      max="50",
+     *      minMessage="Manufacturer name must contain at least 2 characters",
+     *      maxMessage="Manufacturer name should not contain more than 50 characters"
+     * )
+     * 
+     * @Expose
+     * @Groups({"product"})
+     */
+    private $manufacturer;
 
     /**
      * @ORM\Column(type="datetime")
@@ -56,6 +93,18 @@ class Product
 
     /**
      * @ORM\Column(type="float", length=255)
+     * 
+     * @Assert\NotBlank
+     * @Assert\Positive
+     * @Assert\Type(
+     *      type="numeric",
+     *      message="This value should be a numeric value"
+     *      )
+     * @Assert\Type(
+     *     type="float",
+     *     message="This value is not a valid float number"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -63,6 +112,18 @@ class Product
 
     /**
      * @ORM\Column(type="float")
+     * 
+     * @Assert\NotBlank
+     * @Assert\Positive
+     * @Assert\Type(
+     *      type="numeric",
+     *      message="This value should be a numeric value"
+     *      )
+     * @Assert\Type(
+     *     type="float",
+     *     message="This value is not a valid float number"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -70,6 +131,18 @@ class Product
 
     /**
      * @ORM\Column(type="float")
+     * 
+     * @Assert\NotBlank
+     * @Assert\Positive
+     * @Assert\Type(
+     *      type="numeric",
+     *      message="This value should be a numeric value"
+     *      )
+     * @Assert\Type(
+     *     type="float",
+     *     message="This value is not a valid float number"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -77,6 +150,18 @@ class Product
 
     /**
      * @ORM\Column(type="float")
+     * 
+     * @Assert\NotBlank
+     * @Assert\Positive
+     * @Assert\Type(
+     *      type="numeric",
+     *      message="This value should be a numeric value"
+     *      )
+     * @Assert\Type(
+     *     type="float",
+     *     message="This value is not a valid float number"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -84,6 +169,18 @@ class Product
 
     /**
      * @ORM\Column(type="float")
+     * 
+     * @Assert\NotBlank
+     * @Assert\Positive
+     * @Assert\Type(
+     *      type="numeric",
+     *      message="This value should be a numeric value"
+     *      )
+     * @Assert\Type(
+     *     type="float",
+     *     message="This value is not a valid float number"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -91,6 +188,18 @@ class Product
 
     /**
      * @ORM\Column(type="float")
+     * 
+     * @Assert\NotBlank
+     * @Assert\Positive
+     * @Assert\Type(
+     *      type="numeric",
+     *      message="This value should be a numeric value"
+     *      )
+     * @Assert\Type(
+     *     type="float",
+     *     message="This value is not a valid float number"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -98,6 +207,13 @@ class Product
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * 
+     * @Assert\NotNull
+     * @Assert\Type(
+     *      type="bool",
+     *      message="This value should be a boolean"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -105,6 +221,13 @@ class Product
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * 
+     * @Assert\NotNull
+     * @Assert\Type(
+     *      type="bool",
+     *      message="This value should be a boolean"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -112,6 +235,13 @@ class Product
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * 
+     * @Assert\NotNull
+     * @Assert\Type(
+     *      type="bool",
+     *      message="This value should be a boolean"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -119,6 +249,13 @@ class Product
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * 
+     * @Assert\NotNull
+     * @Assert\Type(
+     *      type="bool",
+     *      message="This value should be a boolean"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -126,6 +263,13 @@ class Product
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * 
+     * @Assert\NotNull
+     * @Assert\Type(
+     *      type="bool",
+     *      message="This value should be a boolean"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -133,6 +277,13 @@ class Product
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * 
+     * @Assert\NotNull
+     * @Assert\Type(
+     *      type="bool",
+     *      message="This value should be a boolean"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -140,17 +291,15 @@ class Product
 
     /**
      * @ORM\OneToMany(targetEntity=Configuration::class, mappedBy="product", orphanRemoval=true, cascade={"persist"})
+     * 
+     * @Assert\NotNull
+     * @Assert\NotBlank
+     * @Assert\Valid
+     * 
      * @Expose
      * @Groups({"product"})
      */
     private $configurations;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Expose
-     * @Groups({"product"})
-     */
-    private $manufacturer;
 
     public function __construct()
     {

@@ -10,9 +10,12 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ClientRepository::class)
+ * @UniqueEntity(fields={"email"}, message="This client already exists")
  * @ExclusionPolicy("all")
  */
 class Client implements UserInterface
@@ -28,6 +31,10 @@ class Client implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
+     * @Assert\NotBlank
+     * @Assert\Email
+     * 
      * @Expose
      * @Groups({"client"})
      */
@@ -35,6 +42,15 @@ class Client implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min="6",
+     *      max="30",
+     *      minMessage="Password must contain at least 6 characters",
+     *      maxMessage="Password should not contain more than 30 characters"
+     * )
+     * 
      * @Expose
      */
     private $password;
@@ -55,6 +71,15 @@ class Client implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min="2",
+     *      max="50",
+     *      minMessage="Company name must contain at least 2 characters",
+     *      maxMessage="Company name should not contain more than 50 characters"
+     * )
+     * 
      * @Expose
      * @Groups({"customer", "client"})
      */

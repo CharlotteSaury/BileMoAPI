@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class ClientController extends AbstractFOSRestController
 {
@@ -91,10 +92,13 @@ class ClientController extends AbstractFOSRestController
      * )
      * @ParamConverter("client", converter="fos_rest.request_body")
      */
-    public function createAction(Client $client, UserPasswordEncoderInterface $encoder)
+    public function createAction(Client $client, UserPasswordEncoderInterface $encoder, ConstraintViolationList $violations)
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->authorizationHandler->forbiddenResponse('add', 'client');
+        }
+        if (count($violations)) {
+            return $this->view($violations, Response::HTTP_BAD_REQUEST);
         }
 
         $client->setRoles(['ROLE_USER']);

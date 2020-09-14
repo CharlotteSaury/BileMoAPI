@@ -14,6 +14,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class ProductController extends AbstractFOSRestController
 {
@@ -100,23 +101,31 @@ class ProductController extends AbstractFOSRestController
      *      StatusCode = 201,
      *      serializerGroups={"product"}
      * )
-     * @ParamConverter("product", converter="fos_rest.request_body")
+     * @ParamConverter(
+     *      "product", 
+     *      converter="fos_rest.request_body"
+     * )
      */
-    public function createAction(Product $product)
+    public function createAction(Product $product, ConstraintViolationList $violations)
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->authorizationHandler->forbiddenResponse('add', 'product');
         }
-        
+        if (count($violations)) {
+            return $this->view($violations, Response::HTTP_BAD_REQUEST);
+        }
+
         $product->setCreatedAt(new DateTime());
-        $this->entityManager->persist($product);
-        foreach ($product->getConfigurations() as $config) {
-            $config->setProduct($product);
-            foreach ($config->getImages() as $image) {
-                $image->setConfiguration($config);
+        if ($product->getConfigurations() != null) {
+            foreach ($product->getConfigurations() as $config) {
+                $config->setProduct($product);
+                foreach ($config->getImages() as $image) {
+                    $image->setConfiguration($config);
+                }
             }
         }
-        
+
+        $this->entityManager->persist($product);
         $this->entityManager->flush();
 
         return $this->view(

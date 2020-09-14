@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
@@ -25,6 +27,10 @@ class Customer
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
+     * @Assert\NotBlank
+     * @Assert\Email
+     * 
      * @Expose
      * @Groups({"customer", "client"})
      */
@@ -32,6 +38,13 @@ class Customer
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min="2",
+     *      max="30"
+     * )
+     * 
      * @Expose
      * @Groups({"customer", "client"})
      */
@@ -39,6 +52,13 @@ class Customer
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min="2",
+     *      max="30"
+     * )
+     * 
      * @Expose
      * @Groups({"customer", "client"})
      */

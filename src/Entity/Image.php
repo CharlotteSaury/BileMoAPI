@@ -7,6 +7,7 @@ use App\Repository\ImageRepository;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
@@ -23,6 +24,9 @@ class Image
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
+     * @Assert\Url
+     * 
      * @Expose
      * @Groups({"product"})
      */

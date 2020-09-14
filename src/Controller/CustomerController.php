@@ -6,6 +6,7 @@ use App\Entity\Customer;
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Handler\AuthorizationJsonHandler;
+use DateTime;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class CustomerController extends AbstractFOSRestController
 {
@@ -83,9 +85,26 @@ class CustomerController extends AbstractFOSRestController
      * )
      * @ParamConverter("customer", converter="fos_rest.request_body")
      */
-    public function createAction(Customer $customer)
+    public function createAction(Customer $customer, ConstraintViolationList $violations)
     {
+        if (count($violations)) {
+            return $this->view($violations, Response::HTTP_BAD_REQUEST);
+        }
+        $customers = $this->customerRepository->findBy(['client' => $this->getUser()]);
+
+        foreach ($customers as $currentCustomer) {
+            if ($currentCustomer->getEmail() === $customer->getEmail()) {
+                return new JsonResponse([
+                    'code' => 400,
+                    'message' => 'This customer is already associated to this client'
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+            }
+        }
+
         $customer->setClient($this->getUser());
+        $customer->setCreatedAt(new DateTime());
         $this->entityManager->persist($customer);
         $this->entityManager->flush();
 

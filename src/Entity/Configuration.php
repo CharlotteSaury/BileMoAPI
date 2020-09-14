@@ -9,6 +9,8 @@ use App\Repository\ConfigurationRepository;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ConfigurationRepository::class)
@@ -24,7 +26,15 @@ class Configuration
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer", length=255)
+     * 
+     * @Assert\NotBlank
+     * @Assert\Positive
+     * @Assert\Type(
+     *      type="integer",
+     *      message="This value should be an integer value"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -32,6 +42,15 @@ class Configuration
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min="2",
+     *      max="50",
+     *      minMessage="Manufacturer name must contain at least 2 characters",
+     *      maxMessage="Manufacturer name should not contain more than 50 characters"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -39,6 +58,18 @@ class Configuration
 
     /**
      * @ORM\Column(type="float")
+     * 
+     * @Assert\NotBlank
+     * @Assert\Positive
+     * @Assert\Type(
+     *      type="numeric",
+     *      message="This value should be a numeric value"
+     *      )
+     * @Assert\Type(
+     *     type="float",
+     *     message="This value is not a valid float number"
+     * )
+     * 
      * @Expose
      * @Groups({"product"})
      */
@@ -54,6 +85,8 @@ class Configuration
 
     /**
      * @ORM\OneToMany(targetEntity=Image::class, mappedBy="configuration", orphanRemoval=true, cascade={"persist"})
+     * @Assert\NotBlank
+     * @Assert\Valid
      * @Expose
      * @Groups({"product"})
      */

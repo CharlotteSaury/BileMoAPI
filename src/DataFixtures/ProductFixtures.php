@@ -16,10 +16,10 @@ class ProductFixtures extends Fixture
         $faker = \Faker\Factory::create('fr_FR');
         $date = $faker->DateTime();
         $memory = [
-            '32 Go',
-            '64 Go',
-            '128 Go',
-            '256 Go',
+            '32',
+            '64',
+            '128',
+            '256',
         ];
 
         $features = [
@@ -83,7 +83,6 @@ class ProductFixtures extends Fixture
             }
             
             $manager->persist($product);
-            $this->addReference('product'.$i, $product);
             $manager->flush();
         }
     }
