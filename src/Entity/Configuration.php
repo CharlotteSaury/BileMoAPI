@@ -36,7 +36,7 @@ class Configuration
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $memory;
 
@@ -52,7 +52,7 @@ class Configuration
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $color;
 
@@ -71,7 +71,7 @@ class Configuration
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $price;
 
@@ -79,7 +79,7 @@ class Configuration
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="configurations", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $product;
 
@@ -88,7 +88,7 @@ class Configuration
      * @Assert\NotBlank
      * @Assert\Valid
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $images;
 

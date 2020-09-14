@@ -25,6 +25,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          parameters={"id"="expr(object.getId())"},
  *          absolute = true
  *      ),
+ *      exclusion = @Hateoas\Exclusion(groups = {"product", "products_list"})
+ * )
+ * @Hateoas\Relation(
+ *      "list",
+ *      href = @Hateoas\Route(
+ *          "app_customers_list",
+ *          absolute = true
+ *      ),
  *      exclusion = @Hateoas\Exclusion(groups = "product")
  * )
  * @Hateoas\Relation(
@@ -33,7 +41,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          "app_products_create",
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups = "product")
+ *      exclusion = @Hateoas\Exclusion(groups = {"product", "products_list"})
  * )
  * @Hateoas\Relation(
  *      "delete",
@@ -42,7 +50,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          parameters={"id"="expr(object.getId())"},
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups = "product")
+ *      exclusion = @Hateoas\Exclusion(groups = {"product", "products_list"})
  * )
  */
 class Product
@@ -52,7 +60,7 @@ class Product
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $id;
 
@@ -68,7 +76,7 @@ class Product
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $name;
 
@@ -84,7 +92,7 @@ class Product
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $description;
 
@@ -100,21 +108,21 @@ class Product
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $manufacturer;
 
     /**
      * @ORM\Column(type="datetime")
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $updatedAt;
 
@@ -133,7 +141,7 @@ class Product
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $screen;
 
@@ -152,7 +160,7 @@ class Product
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $das;
 
@@ -171,7 +179,7 @@ class Product
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $weight;
 
@@ -190,7 +198,7 @@ class Product
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $length;
 
@@ -209,7 +217,7 @@ class Product
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $width;
 
@@ -228,7 +236,7 @@ class Product
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $height;
 
@@ -242,7 +250,7 @@ class Product
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $wifi;
 
@@ -256,7 +264,7 @@ class Product
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $video4k;
 
@@ -270,7 +278,7 @@ class Product
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $bluetooth;
 
@@ -284,7 +292,7 @@ class Product
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $lte4G;
 
@@ -298,7 +306,7 @@ class Product
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $camera;
 
@@ -312,7 +320,7 @@ class Product
      * )
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $nfc;
 
@@ -324,7 +332,7 @@ class Product
      * @Assert\Valid
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $configurations;
 

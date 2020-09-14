@@ -29,6 +29,14 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *      exclusion = @Hateoas\Exclusion(groups = "client")
  * )
  * @Hateoas\Relation(
+ *      "list",
+ *      href = @Hateoas\Route(
+ *          "app_customers_list",
+ *          absolute = true
+ *      ),
+ *      exclusion = @Hateoas\Exclusion(groups = "client")
+ * )
+ * @Hateoas\Relation(
  *      "create",
  *      href = @Hateoas\Route(
  *          "app_clients_create",
@@ -62,7 +70,7 @@ class Client implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Expose
-     * @Groups({"client"})
+     * @Groups({"customer", "client"})
      */
     private $id;
 
@@ -73,7 +81,7 @@ class Client implements UserInterface
      * @Assert\Email
      * 
      * @Expose
-     * @Groups({"client"})
+     * @Groups({"customer", "client"})
      */
     private $email;
 
@@ -118,7 +126,7 @@ class Client implements UserInterface
      * )
      * 
      * @Expose
-     * @Groups({"customer", "client"})
+     * @Groups({"customer", "customers_list", "client"})
      */
     private $company;
 

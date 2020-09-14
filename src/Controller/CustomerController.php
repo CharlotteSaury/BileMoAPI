@@ -65,7 +65,7 @@ class CustomerController extends AbstractFOSRestController
      *      name = "app_customers_list"
      * )
      * @Rest\View(
-     *      serializerGroups={"customer"}
+     *      serializerGroups={"customers_list"}
      * )
      */
     public function listAction()

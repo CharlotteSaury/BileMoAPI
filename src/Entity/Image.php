@@ -28,7 +28,7 @@ class Image
      * @Assert\Url
      * 
      * @Expose
-     * @Groups({"product"})
+     * @Groups({"product", "products_list"})
      */
     private $url;
 

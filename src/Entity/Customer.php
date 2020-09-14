@@ -22,6 +22,23 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          parameters={"id"="expr(object.getId())"},
  *          absolute = true
  *      ),
+ *      exclusion = @Hateoas\Exclusion(groups = {"customer", "customers_list"})
+ * )
+ * @Hateoas\Relation(
+ *      "client",
+ *      href = @Hateoas\Route(
+ *          "app_clients_show",
+ *          parameters={"id"="expr(object.getClient().getId())"},
+ *          absolute = true
+ *      ),
+ *      exclusion = @Hateoas\Exclusion(groups = {"customer", "customers_list"})
+ * )
+ * @Hateoas\Relation(
+ *      "list",
+ *      href = @Hateoas\Route(
+ *          "app_customers_list",
+ *          absolute = true
+ *      ),
  *      exclusion = @Hateoas\Exclusion(groups = "customer")
  * )
  * @Hateoas\Relation(
@@ -39,6 +56,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          parameters={"id"="expr(object.getId())"},
  *          absolute = true
  *      ),
+ *      exclusion = @Hateoas\Exclusion(groups = {"customer", "customers_list"})
+ * )
+ * @Hateoas\Relation(
+ *      "client",
+ *      embedded = @Hateoas\Embedded("expr(object.getClient())"),
  *      exclusion = @Hateoas\Exclusion(groups = "customer")
  * )
  */
@@ -49,7 +71,7 @@ class Customer
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Expose
-     * @Groups({"customer", "client"})
+     * @Groups({"customer", "customers_list", "client"})
      */
     private $id;
 
@@ -60,7 +82,7 @@ class Customer
      * @Assert\Email
      * 
      * @Expose
-     * @Groups({"customer", "client"})
+     * @Groups({"customer", "customers_list", "client"})
      */
     private $email;
 
@@ -74,7 +96,7 @@ class Customer
      * )
      * 
      * @Expose
-     * @Groups({"customer", "client"})
+     * @Groups({"customer", "customers_list", "client"})
      */
     private $firstName;
 
@@ -88,14 +110,14 @@ class Customer
      * )
      * 
      * @Expose
-     * @Groups({"customer", "client"})
+     * @Groups({"customer", "customers_list", "client"})
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="datetime")
      * @Expose
-     * @Groups({"customer", "client"})
+     * @Groups({"customer", "customers_list", "client"})
      */
     private $createdAt;
 
@@ -103,7 +125,6 @@ class Customer
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="customers", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      * @Expose
-     * @Groups({"customer"})
      */
     private $client;
 

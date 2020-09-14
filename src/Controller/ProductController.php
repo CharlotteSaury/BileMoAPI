@@ -61,7 +61,7 @@ class ProductController extends AbstractFOSRestController
      *      name = "app_products_list"
      * )
      * @Rest\View(
-     *      serializerGroups={"product"}
+     *      serializerGroups={"products_list"}
      * )
      */
     public function listAction()
