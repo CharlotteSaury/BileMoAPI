@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use DateTime;
+use Exception;
 use Hateoas\Hateoas;
 use App\Entity\Product;
 use App\Form\ProductType;
@@ -12,9 +13,9 @@ use JMS\Serializer\SerializerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use App\Handler\AuthorizationJsonHandler;
-use Exception;
 use FOS\RestBundle\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
+use App\Exception\ResourceValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -23,8 +24,8 @@ use JMS\Serializer\Serializer as SerializerSerializer;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class ProductController extends AbstractFOSRestController
 {
@@ -143,7 +144,11 @@ class ProductController extends AbstractFOSRestController
             return $this->authorizationHandler->forbiddenResponse('add', 'product');
         }
         if (count($violations)) {
-            return $this->view($violations, Response::HTTP_BAD_REQUEST);
+            $message = 'The JSON sent contains invalid data. Here are the errors you need to correct: ';
+            foreach ($violations as $violation) {
+                $message .= sprintf("Field %s: %s ", $violation->getPropertyPath(), $violation->getMessage());
+            }
+            throw new ResourceValidationException($message);
         }
 
         $product->setCreatedAt(new DateTime());

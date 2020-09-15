@@ -25,6 +25,9 @@ class ExceptionSubscriber implements EventSubscriberInterface
         } elseif ($exception instanceof \Pagerfanta\Exception\OutOfRangeCurrentPageException) {
             $message = $exception->getMessage();
             $status = 404;
+        } elseif ($exception instanceof \App\Exception\ResourceValidationException) {
+            $message = $exception->getMessage();
+            $status = 400;
         } else {
             $message = $exception->getMessage();
             $status = $exception->getStatusCode();

@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use App\Handler\AuthorizationJsonHandler;
 use Symfony\Component\HttpFoundation\Request;
+use App\Exception\ResourceValidationException;
 use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Request\ParamFetcherInterface;
@@ -110,8 +111,13 @@ class CustomerController extends AbstractFOSRestController
     public function createAction(Customer $customer, ConstraintViolationList $violations)
     {
         if (count($violations)) {
-            return $this->view($violations, Response::HTTP_BAD_REQUEST);
+            $message = 'The JSON sent contains invalid data. Here are the errors you need to correct: ';
+            foreach ($violations as $violation) {
+                $message .= sprintf("Field %s: %s ", $violation->getPropertyPath(), $violation->getMessage());
+            }
+            throw new ResourceValidationException($message);
         }
+
         $customers = $this->customerRepository->findBy(['client' => $this->getUser()]);
 
         foreach ($customers as $currentCustomer) {
