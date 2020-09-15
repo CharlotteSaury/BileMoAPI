@@ -2,17 +2,18 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ClientRepository;
-use DateTime;
+use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Doctrine\Common\Collections\ArrayCollection;
+use Hateoas\Configuration\Annotation as Hateoas;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
-use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * @ORM\Entity(repositoryClass=ClientRepository::class)
@@ -71,6 +72,8 @@ class Client implements UserInterface
      * @ORM\Column(type="integer")
      * @Expose
      * @Groups({"client", "clients_list"})
+     * 
+     * @Since("1.0")
      */
     private $id;
 
@@ -81,6 +84,8 @@ class Client implements UserInterface
      * @Assert\Email
      * @Expose
      * @Groups({"customer", "client", "clients_list"})
+     * 
+     * @Since("1.0")
      */
     private $email;
 
@@ -97,6 +102,8 @@ class Client implements UserInterface
      * @Expose
      * @Groups({"client_create"})
      * 
+     * @Since("1.0")
+     * 
      */
     private $password;
 
@@ -104,12 +111,16 @@ class Client implements UserInterface
      * @ORM\Column(type="datetime")
      * @Expose
      * @Groups({"client", "clients_list"})
+     * 
+     * @Since("1.0")
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="json")
      * @Groups({"client"})
+     * 
+     * @Since("1.0")
      */
     private $roles = [];
 
@@ -126,6 +137,8 @@ class Client implements UserInterface
      * 
      * @Expose
      * @Groups({"customer", "customers_list", "client", "clients_list"})
+     * 
+     * @Since("1.0")
      */
     private $company;
 
@@ -133,6 +146,8 @@ class Client implements UserInterface
      * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="client", orphanRemoval=true)
      * @Expose
      * @Groups({"client"})
+     * 
+     * @Since("1.0")
      */
     private $customers;
 

@@ -4,12 +4,13 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Since;
 use App\Repository\ProductRepository;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
-use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Doctrine\Common\Collections\ArrayCollection;
+use Hateoas\Configuration\Annotation as Hateoas;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -83,6 +84,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $name;
 
@@ -99,6 +102,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $description;
 
@@ -115,6 +120,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $manufacturer;
 
@@ -122,6 +129,8 @@ class Product
      * @ORM\Column(type="datetime")
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $createdAt;
 
@@ -129,6 +138,8 @@ class Product
      * @ORM\Column(type="datetime", nullable=true)
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $updatedAt;
 
@@ -148,6 +159,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $screen;
 
@@ -167,6 +180,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $das;
 
@@ -186,6 +201,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $weight;
 
@@ -205,6 +222,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $length;
 
@@ -224,6 +243,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $width;
 
@@ -243,6 +264,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $height;
 
@@ -257,6 +280,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $wifi;
 
@@ -271,6 +296,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $video4k;
 
@@ -285,6 +312,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $bluetooth;
 
@@ -299,6 +328,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $lte4G;
 
@@ -313,6 +344,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $camera;
 
@@ -327,6 +360,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $nfc;
 
@@ -339,6 +374,8 @@ class Product
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $configurations;
 

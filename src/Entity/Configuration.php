@@ -3,14 +3,15 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use App\Repository\ConfigurationRepository;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ConfigurationRepository::class)
@@ -37,6 +38,8 @@ class Configuration
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $memory;
 
@@ -53,6 +56,8 @@ class Configuration
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $color;
 
@@ -72,6 +77,8 @@ class Configuration
      * 
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $price;
 
@@ -80,6 +87,8 @@ class Configuration
      * @ORM\JoinColumn(nullable=false)
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $product;
 
@@ -89,6 +98,8 @@ class Configuration
      * @Assert\Valid
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @Since("1.0")
      */
     private $images;
 

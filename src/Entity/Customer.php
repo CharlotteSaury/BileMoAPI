@@ -3,11 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use App\Repository\CustomerRepository;
-use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use Hateoas\Configuration\Annotation as Hateoas;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -89,6 +90,8 @@ class Customer
      * 
      * @Expose
      * @Groups({"customer", "customers_list", "client"})
+     * 
+     * @Since("1.0")
      */
     private $email;
 
@@ -103,6 +106,8 @@ class Customer
      * 
      * @Expose
      * @Groups({"customer", "customers_list", "client"})
+     * 
+     * @Since("1.0")
      */
     private $firstName;
 
@@ -117,6 +122,8 @@ class Customer
      * 
      * @Expose
      * @Groups({"customer", "customers_list", "client"})
+     * 
+     * @Since("1.0")
      */
     private $lastName;
 
@@ -124,6 +131,8 @@ class Customer
      * @ORM\Column(type="datetime")
      * @Expose
      * @Groups({"customer", "customers_list", "client"})
+     * 
+     * @Since("1.0")
      */
     private $createdAt;
 
@@ -132,6 +141,8 @@ class Customer
      * @ORM\JoinColumn(nullable=false)
      * @Expose
      * @Groups({"customer", "customers_list"})
+     * 
+     * @Since("1.0")
      */
     private $client;
 
