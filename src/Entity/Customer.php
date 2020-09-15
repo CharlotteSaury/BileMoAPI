@@ -22,7 +22,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          parameters={"id"="expr(object.getId())"},
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups = {"customer", "customers_list"})
+ *      exclusion = @Hateoas\Exclusion(groups = {"customer", "customers_list", "client"})
  * )
  * @Hateoas\Relation(
  *      "client",

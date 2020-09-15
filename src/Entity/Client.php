@@ -26,7 +26,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *          parameters={"id"="expr(object.getId())"},
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups = "client")
+ *      exclusion = @Hateoas\Exclusion(groups = {"client", "clients_list"})
  * )
  * @Hateoas\Relation(
  *      "list",
@@ -34,7 +34,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *          "app_customers_list",
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups = "client")
+ *      exclusion = @Hateoas\Exclusion(groups = {"client"})
  * )
  * @Hateoas\Relation(
  *      "create",
@@ -42,7 +42,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *          "app_clients_create",
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups = "client")
+ *      exclusion = @Hateoas\Exclusion(groups = {"client", "clients_list"})
  * )
  * @Hateoas\Relation(
  *      "delete",
@@ -51,7 +51,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *          parameters={"id"="expr(object.getId())"},
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups = "client")
+ *      exclusion = @Hateoas\Exclusion(groups = {"client", "clients_list"})
  * )
  * @Hateoas\Relation(
  *      "update",
@@ -60,7 +60,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *          parameters={"id"="expr(object.getId())"},
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups = "client")
+ *      exclusion = @Hateoas\Exclusion(groups = {"client", "clients_list"})
  * )
  */
 class Client implements UserInterface
@@ -70,7 +70,7 @@ class Client implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Expose
-     * @Groups({"client"})
+     * @Groups({"client", "clients_list"})
      */
     private $id;
 
@@ -79,8 +79,8 @@ class Client implements UserInterface
      * 
      * @Assert\NotBlank
      * @Assert\Email
-     * 
-     * @Groups({"customer", "client"})
+     * @Expose
+     * @Groups({"customer", "client", "clients_list"})
      */
     private $email;
 
@@ -100,7 +100,8 @@ class Client implements UserInterface
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"client"})
+     * @Expose
+     * @Groups({"client", "clients_list"})
      */
     private $createdAt;
 
@@ -122,12 +123,13 @@ class Client implements UserInterface
      * )
      * 
      * @Expose
-     * @Groups({"customer", "customers_list", "client"})
+     * @Groups({"customer", "customers_list", "client", "clients_list"})
      */
     private $company;
 
     /**
      * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="client", orphanRemoval=true)
+     * @Expose
      * @Groups({"client"})
      */
     private $customers;

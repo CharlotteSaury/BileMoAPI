@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Client;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\AbstractRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -12,11 +12,21 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Client[]    findAll()
  * @method Client[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ClientRepository extends ServiceEntityRepository
+class ClientRepository extends AbstractRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Client::class);
+    }
+
+    public function search(int $page, int $limit, string $route)
+    {
+        $builder = $this
+            ->createQueryBuilder('c')
+            ->select('c')
+            ;
+
+        return $this->paginate($builder->getQuery()->getResult(), $page, $limit, $route);
     }
 
     // /**
