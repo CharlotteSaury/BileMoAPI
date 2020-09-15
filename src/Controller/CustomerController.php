@@ -2,20 +2,23 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Customer;
 use App\Repository\CustomerRepository;
+use JMS\Serializer\SerializerInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializationContext;
 use App\Handler\AuthorizationJsonHandler;
-use DateTime;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Validator\ConstraintViolationList;
 
 class CustomerController extends AbstractFOSRestController
 {
@@ -64,14 +67,33 @@ class CustomerController extends AbstractFOSRestController
      *      path = "/api/customers",
      *      name = "app_customers_list"
      * )
-     * @Rest\View(
-     *      serializerGroups={"customers_list"}
+     * @Rest\View()
+     * @Rest\QueryParam(
+     *     name="page",
+     *     requirements="^[1-9]+[0-9]*$",
+     *     default="1",
+     *     description="Current page of product list."
+     * )
+     * @Rest\QueryParam(
+     *     name="limit",
+     *     requirements="^[1-9]+[0-9]*$",
+     *     default="10",
+     *     description="Maximum number of products per page."
      * )
      */
-    public function listAction()
+    public function listAction(ParamFetcherInterface $paramFetcher, Request $request, SerializerInterface $serializer)
     {
-        $customers = $this->customerRepository->findBy(['client' => $this->getUser()]);
-        return $customers;
+        $paginatedRepresentation = $this->customerRepository->search(
+            $paramFetcher->get('page'),
+            $paramFetcher->get('limit'),
+            $request->get('_route'),
+            $this->getUser()
+        );
+        $data = $serializer->serialize($paginatedRepresentation, 'json', SerializationContext::create()->setGroups(['Default', 'customers_list']));
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**

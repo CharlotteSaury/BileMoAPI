@@ -31,7 +31,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          parameters={"id"="expr(object.getClient().getId())"},
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups = {"customer", "customers_list"})
+ *      exclusion = @Hateoas\Exclusion(
+ *          groups = {"customer", "customers_list"},
+ *          excludeIf = "expr(not is_granted('ROLE_ADMIN'))"
+ *      )
  * )
  * @Hateoas\Relation(
  *      "list",
@@ -47,7 +50,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          "app_customers_create",
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups = "customer")
+ *      exclusion = @Hateoas\Exclusion(groups = {"customer", "customers_list"})
  * )
  * @Hateoas\Relation(
  *      "delete",
@@ -61,7 +64,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @Hateoas\Relation(
  *      "client",
  *      embedded = @Hateoas\Embedded("expr(object.getClient())"),
- *      exclusion = @Hateoas\Exclusion(groups = "customer")
+ *      exclusion = @Hateoas\Exclusion(
+ *          groups = {"customer", "customers_list"},
+ *          excludeIf = "expr(not is_granted('ROLE_ADMIN'))"
+ *      )
  * )
  */
 class Customer
@@ -125,6 +131,7 @@ class Customer
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="customers", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      * @Expose
+     * @Groups({"customer", "customers_list"})
      */
     private $client;
 

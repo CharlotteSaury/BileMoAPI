@@ -70,7 +70,7 @@ class Client implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Expose
-     * @Groups({"customer", "client"})
+     * @Groups({"client"})
      */
     private $id;
 
@@ -80,7 +80,6 @@ class Client implements UserInterface
      * @Assert\NotBlank
      * @Assert\Email
      * 
-     * @Expose
      * @Groups({"customer", "client"})
      */
     private $email;
@@ -96,20 +95,17 @@ class Client implements UserInterface
      *      maxMessage="Password should not contain more than 30 characters"
      * )
      * 
-     * @Expose
      */
     private $password;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Expose
      * @Groups({"client"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="json")
-     * @Expose
      * @Groups({"client"})
      */
     private $roles = [];
@@ -132,7 +128,6 @@ class Client implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="client", orphanRemoval=true)
-     * @Expose
      * @Groups({"client"})
      */
     private $customers;

@@ -41,7 +41,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          "app_products_create",
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups = {"product", "products_list"})
+ *      exclusion = @Hateoas\Exclusion(
+ *          groups = {"product", "products_list"},
+ *          excludeIf = "expr(not is_granted('ROLE_ADMIN'))"
+ *      )
  * )
  * @Hateoas\Relation(
  *      "delete",
@@ -50,7 +53,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          parameters={"id"="expr(object.getId())"},
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups = {"product", "products_list"})
+ *      exclusion = @Hateoas\Exclusion(
+ *          groups = {"product", "products_list"},
+ *          excludeIf = "expr(not is_granted('ROLE_ADMIN'))"
+ *      )
  * )
  */
 class Product

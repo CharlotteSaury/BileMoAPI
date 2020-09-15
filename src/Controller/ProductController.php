@@ -3,25 +3,26 @@
 namespace App\Controller;
 
 use DateTime;
+use Hateoas\Hateoas;
 use App\Entity\Product;
 use App\Form\ProductType;
+use FOS\RestBundle\Context\Context;
 use App\Repository\ProductRepository;
 use JMS\Serializer\SerializerInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializationContext;
 use App\Handler\AuthorizationJsonHandler;
-use FOS\RestBundle\Context\Context;
+use FOS\RestBundle\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Controller\AbstractFOSRestController;
-use FOS\RestBundle\Serializer\Serializer;
-use Hateoas\Hateoas;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use JMS\Serializer\Serializer as SerializerSerializer;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ProductController extends AbstractFOSRestController
 {
@@ -91,7 +92,7 @@ class ProductController extends AbstractFOSRestController
             $paramFetcher->get('limit'),
             $request->get('_route')
         );
-        $data = $serializer->serialize($paginatedRepresentation, 'json');
+        $data = $serializer->serialize($paginatedRepresentation, 'json', SerializationContext::create()->setGroups(['Default', 'products_list']));
         $response = new Response($data);
         $response->headers->set('Content-Type', 'application/json');
 

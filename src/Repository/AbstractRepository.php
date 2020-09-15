@@ -25,11 +25,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
         $numberOfPages = $pagerfanta->getNbPages();
         
         $paginatedRepresentation = new PaginatedRepresentation(
-            new CollectionRepresentation(
-                $pagerfanta->getCurrentPageResults(),
-                'products',
-                'products'
-            ),
+            new CollectionRepresentation($pagerfanta->getCurrentPageResults()),
             $route,
             [],
             $page,
