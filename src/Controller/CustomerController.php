@@ -58,7 +58,7 @@ class CustomerController extends AbstractFOSRestController
     public function showAction(Customer $customer)
     {
         if (!$this->isGranted('MANAGE', $customer)) {
-            return $this->authorizationHandler->forbiddenResponse('see', 'client');
+            return $this->authorizationHandler->forbiddenResponse('see', 'customer');
         }
         return $customer;
     }

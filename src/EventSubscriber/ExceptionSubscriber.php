@@ -28,7 +28,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
         } elseif ($exception instanceof \App\Exception\ResourceValidationException) {
             $message = $exception->getMessage();
             $status = 400;
-        } else {
+        } elseif ($exception instanceof \Exception){
             $message = $exception->getMessage();
             $status = $exception->getStatusCode();
         }
