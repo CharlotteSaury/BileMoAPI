@@ -20,3 +20,4 @@ fos_rest:
         validation_errors_argument: violations
     serializer:
         serialize_null: true
+    param_fetcher_listener: true

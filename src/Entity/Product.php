@@ -30,10 +30,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @Hateoas\Relation(
  *      "list",
  *      href = @Hateoas\Route(
- *          "app_customers_list",
+ *          "app_products_list",
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups = "product")
+ *      exclusion = @Hateoas\Exclusion(groups = {"product"})
  * )
  * @Hateoas\Relation(
  *      "create",
