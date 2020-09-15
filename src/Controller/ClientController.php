@@ -111,7 +111,7 @@ class ClientController extends AbstractFOSRestController
      * )
      * @Rest\View(
      *      StatusCode = 201,
-     *      serializerGroups={"client"}
+     *      serializerGroups={"client", "client_create"}
      * )
      * @ParamConverter("client", converter="fos_rest.request_body")
      */
@@ -120,16 +120,12 @@ class ClientController extends AbstractFOSRestController
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->authorizationHandler->forbiddenResponse('add', 'client');
         }
-        /*if (count($violations)) {
-            return $this->view($violations, Response::HTTP_BAD_REQUEST);
-        }*/
 
         if (count($violations)) {
             $message = 'The JSON sent contains invalid data. Here are the errors you need to correct: ';
             foreach ($violations as $violation) {
                 $message .= sprintf("Field %s: %s ", $violation->getPropertyPath(), $violation->getMessage());
             }
-
             throw new ResourceValidationException($message);
         }
 

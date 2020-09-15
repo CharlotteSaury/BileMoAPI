@@ -94,6 +94,8 @@ class Client implements UserInterface
      *      minMessage="Password must contain at least 6 characters",
      *      maxMessage="Password should not contain more than 30 characters"
      * )
+     * @Expose
+     * @Groups({"client_create"})
      * 
      */
     private $password;
