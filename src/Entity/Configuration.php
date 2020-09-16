@@ -29,6 +29,7 @@ class Configuration
     /**
      * @ORM\Column(type="integer", length=255)
      * 
+     * @Assert\NotNull
      * @Assert\NotBlank
      * @Assert\Positive
      * @Assert\Type(
@@ -46,6 +47,7 @@ class Configuration
     /**
      * @ORM\Column(type="string", length=255)
      * 
+     * @Assert\NotNull
      * @Assert\NotBlank
      * @Assert\Length(
      *      min="2",
@@ -64,6 +66,7 @@ class Configuration
     /**
      * @ORM\Column(type="float")
      * 
+     * @Assert\NotNull
      * @Assert\NotBlank
      * @Assert\Positive
      * @Assert\Type(

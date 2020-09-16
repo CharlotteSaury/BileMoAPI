@@ -2,52 +2,29 @@
 
 namespace App\Controller;
 
-use DateTime;
-use App\Entity\User;
 use App\Entity\Client;
-use App\Repository\ClientRepository;
-use JMS\Serializer\SerializerInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use JMS\Serializer\SerializationContext;
-use App\Handler\AuthorizationJsonHandler;
+use App\Service\ClientService;
 use Symfony\Component\HttpFoundation\Request;
-use App\Exception\ResourceValidationException;
-use App\Handler\ConstraintsViolationHandler;
-use App\Handler\PaginationHandler;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ClientController extends AbstractFOSRestController
 {
     /**
-     * @var ClientRepository
+     * @var ClientService
      */
-    private $clientRepository;
+    private $clientService;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var AuthorizationJsonHandler
-     */
-    private $authorizationHandler;
-
-    public function __construct(ClientRepository $clientRepository, EntityManagerInterface $entityManager, AuthorizationJsonHandler $authorizationHandler)
+    public function __construct(ClientService $clientService)
     {
-        $this->clientRepository = $clientRepository;
-        $this->entityManager = $entityManager;
-        $this->authorizationHandler = $authorizationHandler;
+        $this->clientService = $clientService;
     }
 
     /**
@@ -61,13 +38,11 @@ class ClientController extends AbstractFOSRestController
      * )
      * 
      * @Cache(maxage="3600", public=true, mustRevalidate=true)
+     * 
+     * IsGranted("MANAGE", subject="client")
      */
     public function showAction(Client $client)
     {
-        if (!$this->isGranted('MANAGE', $client)) {
-            return $this->authorizationHandler->forbiddenResponse('see', 'client');
-        }
-
         return $client;
     }
 
@@ -92,21 +67,11 @@ class ClientController extends AbstractFOSRestController
      *     default="10",
      *     description="Maximum number of products per page."
      * )
+     * IsGrante("ROLE_ADMIN")
      */
-    public function listAction(ParamFetcherInterface $paramFetcher, Request $request, PaginationHandler $paginationHandler)
+    public function listAction(ParamFetcherInterface $paramFetcher, Request $request)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->authorizationHandler->forbiddenResponse('list', 'clients');
-        }
-
-        $paginatedRepresentation = $paginationHandler->paginate(
-            'client', 
-            $paramFetcher->get('page'), 
-            $paramFetcher->get('limit'), 
-            $request->get('_route')
-        );
-
-        return $paginatedRepresentation;
+        return $this->clientService->handleList($paramFetcher, $request);
     }
 
     /**
@@ -119,25 +84,16 @@ class ClientController extends AbstractFOSRestController
      *      serializerGroups={"client", "client_create"}
      * )
      * @ParamConverter("client", converter="fos_rest.request_body")
+     * @IsGranted("ROLE_ADMIN")
      */
-    public function createAction(Client $client, UserPasswordEncoderInterface $encoder, ConstraintViolationList $violations, ConstraintsViolationHandler $constraintsViolationHandler)
+    public function createAction(Client $client, ConstraintViolationList $violations)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->authorizationHandler->forbiddenResponse('add', 'client');
-        }
-        $constraintsViolationHandler->validate($violations);
-
-        $client->setRoles(['ROLE_USER']);
-        $client->setCreatedAt(new DateTime());
-        $hashedPassword = $encoder->encodePassword($client, $client->getPassword());
-        $client->setPassword($hashedPassword);
-        $this->entityManager->persist($client);
-        $this->entityManager->flush();
-
+        $newClient = $this->clientService->handleCreate($client, $violations);
+        
         return $this->view(
-            $client,
+            $newClient,
             Response::HTTP_CREATED,
-            ['Location' => $this->generateUrl('app_clients_show', ['id' => $client->getId()], UrlGeneratorInterface::ABSOLUTE_URL)]
+            ['Location' => $this->generateUrl('app_clients_show', ['id' => $newClient->getId()], UrlGeneratorInterface::ABSOLUTE_URL)]
         );
     }
 
@@ -150,17 +106,11 @@ class ClientController extends AbstractFOSRestController
      * @Rest\View(
      *      StatusCode = Response::HTTP_NO_CONTENT
      * )
+     * @IsGranted("ROLE_ADMIN")
      */
     public function deleteAction(Request $request)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->authorizationHandler->forbiddenResponse('delete', 'client');
-        }
-        $client = $this->clientRepository->findOneBy(['id' => $request->get('id')]);
-        if ($client) {
-            $this->entityManager->remove($client);
-            $this->entityManager->flush();
-        }
+        $this->clientService->handleDelete($request);
     }
 
     /**
@@ -172,34 +122,11 @@ class ClientController extends AbstractFOSRestController
      * @Rest\View(
      *      StatusCode = 200
      * )
+     * @IsGranted("MANAGE", subject="client")
      */
-    public function updateAction(Client $client, Request $request, UserPasswordEncoderInterface $encoder)
+    public function updateAction(Client $client, Request $request)
     {
-        if (!$this->isGranted('MANAGE', $client)) {
-            return $this->authorizationHandler->forbiddenResponse('edit', 'client');
-        }
-
-        $data = json_decode($request->getContent());
-
-        foreach ($data as $key => $value) {
-            if ($key && !empty($value)) {
-                if ($key == 'password') {
-                    if ($this->getUser() != $client) {
-                        return $this->authorizationHandler->forbiddenResponse('password');
-                    } else {
-                        $hashedPassword = $encoder->encodePassword($client, $value);
-                        $client->setPassword($hashedPassword);
-                    }
-                } elseif (in_array($key, ['email', 'company'])) {
-                    $setter = 'set' . ucfirst($key);
-                    $client->$setter($value);
-                } else {
-                    return $this->authorizationHandler->forbiddenResponse('update', 'client', $key);
-                }
-            }
-        }
-        $this->entityManager->flush();
-
-        return $client;
+        $updatedClient = $this->clientService->handleUpdate($client, $request);
+        return $updatedClient;
     }
 }

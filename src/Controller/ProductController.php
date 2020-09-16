@@ -2,18 +2,9 @@
 
 namespace App\Controller;
 
-use DateTime;
-use Exception;
-use App\Handler\PaginationHandler;
 use App\Entity\Product;
-use App\Repository\ProductRepository;
-use JMS\Serializer\SerializerInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use JMS\Serializer\SerializationContext;
-use App\Handler\AuthorizationJsonHandler;
+use App\Service\ProductService;
 use Symfony\Component\HttpFoundation\Request;
-use App\Exception\ResourceValidationException;
-use App\Handler\ConstraintsViolationHandler;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -21,30 +12,19 @@ use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class ProductController extends AbstractFOSRestController
 {
     /**
-     * @var ProductRepository
+     * @var ProductService
      */
-    private $productRepository;
+    private $productService;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var AuthorizationJsonHandler
-     */
-    private $authorizationHandler;
-
-    public function __construct(ProductRepository $productRepository, EntityManagerInterface $entityManager, AuthorizationJsonHandler $authorizationHandler)
+    public function __construct(ProductService $productService)
     {
-        $this->productRepository = $productRepository;
-        $this->entityManager = $entityManager;
-        $this->authorizationHandler = $authorizationHandler;
+        $this->productService = $productService;
     }
 
     /**
@@ -73,7 +53,7 @@ class ProductController extends AbstractFOSRestController
      *      serializerGroups={"products_list"}
      * )
      * 
-     * @Cache(maxage="3600", public=true, mustRevalidate=true)
+     * @Cache(maxage="15", public=true, mustRevalidate=true)
      * 
      * @Rest\QueryParam(
      *     name="page",
@@ -88,16 +68,9 @@ class ProductController extends AbstractFOSRestController
      *     description="Maximum number of products per page."
      * )
      */
-    public function listAction(ParamFetcherInterface $paramFetcher, Request $request, PaginationHandler $paginationHandler)
+    public function listAction(ParamFetcherInterface $paramFetcher, Request $request)
     {
-        $paginatedRepresentation = $paginationHandler->paginate(
-            'product', 
-            $paramFetcher->get('page'), 
-            $paramFetcher->get('limit'), 
-            $request->get('_route')
-        );
-
-        return $paginatedRepresentation;
+        return $this->productService->handleList($paramFetcher, $request);
     }
 
     /**
@@ -109,17 +82,11 @@ class ProductController extends AbstractFOSRestController
      * @Rest\View(
      *      StatusCode = Response::HTTP_NO_CONTENT
      * )
+     * @IsGranted("ROLE_ADMIN")
      */
     public function deleteAction(Request $request)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->authorizationHandler->forbiddenResponse('delete', 'product');
-        }
-        $product = $this->productRepository->findOneBy(['id' => $request->get('id')]);
-        if ($product) {
-            $this->entityManager->remove($product);
-            $this->entityManager->flush();
-        }
+        $this->productService->handleDelete($request);
     }
 
     /**
@@ -135,29 +102,14 @@ class ProductController extends AbstractFOSRestController
      *      "product", 
      *      converter="fos_rest.request_body"
      * )
+     * @IsGranted("ROLE_ADMIN")
      */
-    public function createAction(Product $product, ConstraintViolationList $violations, ConstraintsViolationHandler $constraintsViolationHandler)
+    public function createAction(Product $product, ConstraintViolationList $violations)
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->authorizationHandler->forbiddenResponse('add', 'product');
-        }
-        $constraintsViolationHandler->validate($violations);
-
-        $product->setCreatedAt(new DateTime());
-        if ($product->getConfigurations() != null) {
-            foreach ($product->getConfigurations() as $config) {
-                $config->setProduct($product);
-                foreach ($config->getImages() as $image) {
-                    $image->setConfiguration($config);
-                }
-            }
-        }
-
-        $this->entityManager->persist($product);
-        $this->entityManager->flush();
-
+        $newProduct = $this->productService->handleCreate($product, $violations);
+        
         return $this->view(
-            $product,
+            $newProduct,
             Response::HTTP_CREATED,
             ['Location' => $this->generateUrl('app_products_show', ['id' => $product->getId()], UrlGeneratorInterface::ABSOLUTE_URL)]
         );
