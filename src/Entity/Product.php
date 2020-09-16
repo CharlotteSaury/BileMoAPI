@@ -168,7 +168,6 @@ class Product
      * @ORM\Column(type="float")
      * 
      * @Assert\NotBlank
-     * @Assert\Positive
      * @Assert\Type(
      *      type="numeric",
      *      message="This value should be a numeric value"
@@ -320,7 +319,6 @@ class Product
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * 
-     * @Assert\NotNull
      * @Assert\Type(
      *      type="bool",
      *      message="This value should be a boolean"

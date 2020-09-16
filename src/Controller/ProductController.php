@@ -4,27 +4,23 @@ namespace App\Controller;
 
 use DateTime;
 use Exception;
-use Hateoas\Hateoas;
+use App\Handler\PaginationHandler;
 use App\Entity\Product;
-use App\Form\ProductType;
-use FOS\RestBundle\Context\Context;
 use App\Repository\ProductRepository;
 use JMS\Serializer\SerializerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use App\Handler\AuthorizationJsonHandler;
-use FOS\RestBundle\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use App\Exception\ResourceValidationException;
+use App\Handler\ConstraintsViolationHandler;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use JMS\Serializer\Serializer as SerializerSerializer;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Validator\ConstraintViolationList;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class ProductController extends AbstractFOSRestController
@@ -60,6 +56,8 @@ class ProductController extends AbstractFOSRestController
      * @Rest\View(
      *      serializerGroups={"product"}
      * )
+     * 
+     * @Cache(maxage="3600", public=true, mustRevalidate=true)
      */
     public function showAction(Product $product)
     {
@@ -75,6 +73,8 @@ class ProductController extends AbstractFOSRestController
      *      serializerGroups={"products_list"}
      * )
      * 
+     * @Cache(maxage="3600", public=true, mustRevalidate=true)
+     * 
      * @Rest\QueryParam(
      *     name="page",
      *     requirements="^[1-9]+[0-9]*$",
@@ -88,18 +88,16 @@ class ProductController extends AbstractFOSRestController
      *     description="Maximum number of products per page."
      * )
      */
-    public function listAction(ParamFetcherInterface $paramFetcher, Request $request, SerializerInterface $serializer)
+    public function listAction(ParamFetcherInterface $paramFetcher, Request $request, PaginationHandler $paginationHandler)
     {
-        $paginatedRepresentation = $this->productRepository->search(
-            $paramFetcher->get('page'),
-            $paramFetcher->get('limit'),
+        $paginatedRepresentation = $paginationHandler->paginate(
+            'product', 
+            $paramFetcher->get('page'), 
+            $paramFetcher->get('limit'), 
             $request->get('_route')
         );
-        $data = $serializer->serialize($paginatedRepresentation, 'json', SerializationContext::create()->setGroups(['Default', 'products_list']));
-        $response = new Response($data);
-        $response->headers->set('Content-Type', 'application/json');
 
-        return $response;
+        return $paginatedRepresentation;
     }
 
     /**
@@ -138,18 +136,12 @@ class ProductController extends AbstractFOSRestController
      *      converter="fos_rest.request_body"
      * )
      */
-    public function createAction(Product $product, ConstraintViolationList $violations)
+    public function createAction(Product $product, ConstraintViolationList $violations, ConstraintsViolationHandler $constraintsViolationHandler)
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->authorizationHandler->forbiddenResponse('add', 'product');
         }
-        if (count($violations)) {
-            $message = 'The JSON sent contains invalid data. Here are the errors you need to correct: ';
-            foreach ($violations as $violation) {
-                $message .= sprintf("Field %s: %s ", $violation->getPropertyPath(), $violation->getMessage());
-            }
-            throw new ResourceValidationException($message);
-        }
+        $constraintsViolationHandler->validate($violations);
 
         $product->setCreatedAt(new DateTime());
         if ($product->getConfigurations() != null) {

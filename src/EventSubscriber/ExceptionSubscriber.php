@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
@@ -14,8 +15,6 @@ class ExceptionSubscriber implements EventSubscriberInterface
     public function onKernelException(ExceptionEvent $event)
     {
         $exception = $event->getThrowable();
-        //dd($exception);
-        
         if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
             $message = 'This route or resource does not exist';
             $status = $exception->getStatusCode();
@@ -25,13 +24,12 @@ class ExceptionSubscriber implements EventSubscriberInterface
         } elseif ($exception instanceof \Pagerfanta\Exception\OutOfRangeCurrentPageException) {
             $message = $exception->getMessage();
             $status = 404;
-        } elseif ($exception instanceof \App\Exception\ResourceValidationException) {
+        } elseif ($exception instanceof \App\Exception\ResourceValidationException || $exception instanceof BadRequestHttpException) {
             $message = $exception->getMessage();
             $status = 400;
-        } elseif ($exception instanceof \Exception){
-            $message = $exception->getMessage();
-            $status = $exception->getStatusCode();
-        }
+        } else {
+            return;
+        } 
 
         $data = [
             'status' => $status,

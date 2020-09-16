@@ -12,12 +12,15 @@ use JMS\Serializer\SerializationContext;
 use App\Handler\AuthorizationJsonHandler;
 use Symfony\Component\HttpFoundation\Request;
 use App\Exception\ResourceValidationException;
+use App\Handler\ConstraintsViolationHandler;
+use App\Handler\PaginationHandler;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Validator\ConstraintViolationList;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -56,6 +59,8 @@ class ClientController extends AbstractFOSRestController
      * @Rest\View(
      *      serializerGroups={"client"}
      * )
+     * 
+     * @Cache(maxage="3600", public=true, mustRevalidate=true)
      */
     public function showAction(Client $client)
     {
@@ -73,6 +78,8 @@ class ClientController extends AbstractFOSRestController
      * )
      * @Rest\View()
      * 
+     * @Cache(maxage="3600", public=true, mustRevalidate=true)
+     * 
      * @Rest\QueryParam(
      *     name="page",
      *     requirements="^[1-9]+[0-9]*$",
@@ -86,22 +93,20 @@ class ClientController extends AbstractFOSRestController
      *     description="Maximum number of products per page."
      * )
      */
-    public function listAction(ParamFetcherInterface $paramFetcher, Request $request, SerializerInterface $serializer)
+    public function listAction(ParamFetcherInterface $paramFetcher, Request $request, PaginationHandler $paginationHandler)
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->authorizationHandler->forbiddenResponse('list', 'clients');
         }
 
-        $paginatedRepresentation = $this->clientRepository->search(
-            $paramFetcher->get('page'),
-            $paramFetcher->get('limit'),
+        $paginatedRepresentation = $paginationHandler->paginate(
+            'client', 
+            $paramFetcher->get('page'), 
+            $paramFetcher->get('limit'), 
             $request->get('_route')
         );
-        $data = $serializer->serialize($paginatedRepresentation, 'json', SerializationContext::create()->setGroups(['Default', 'clients_list']));
-        $response = new Response($data);
-        $response->headers->set('Content-Type', 'application/json');
 
-        return $response;
+        return $paginatedRepresentation;
     }
 
     /**
@@ -115,19 +120,12 @@ class ClientController extends AbstractFOSRestController
      * )
      * @ParamConverter("client", converter="fos_rest.request_body")
      */
-    public function createAction(Client $client, UserPasswordEncoderInterface $encoder, ConstraintViolationList $violations)
+    public function createAction(Client $client, UserPasswordEncoderInterface $encoder, ConstraintViolationList $violations, ConstraintsViolationHandler $constraintsViolationHandler)
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->authorizationHandler->forbiddenResponse('add', 'client');
         }
-
-        if (count($violations)) {
-            $message = 'The JSON sent contains invalid data. Here are the errors you need to correct: ';
-            foreach ($violations as $violation) {
-                $message .= sprintf("Field %s: %s ", $violation->getPropertyPath(), $violation->getMessage());
-            }
-            throw new ResourceValidationException($message);
-        }
+        $constraintsViolationHandler->validate($violations);
 
         $client->setRoles(['ROLE_USER']);
         $client->setCreatedAt(new DateTime());

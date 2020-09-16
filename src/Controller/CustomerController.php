@@ -11,13 +11,16 @@ use JMS\Serializer\SerializationContext;
 use App\Handler\AuthorizationJsonHandler;
 use Symfony\Component\HttpFoundation\Request;
 use App\Exception\ResourceValidationException;
+use App\Handler\PaginationHandler;
 use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
+use JMS\Serializer\Handler\ConstraintViolationHandler;
 use Symfony\Component\Validator\ConstraintViolationList;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -54,6 +57,8 @@ class CustomerController extends AbstractFOSRestController
      * @Rest\View(
      *      serializerGroups={"customer"}
      * )
+     *
+     * @Cache(maxage="3600", public=true, mustRevalidate=true)
      */
     public function showAction(Customer $customer)
     {
@@ -81,20 +86,20 @@ class CustomerController extends AbstractFOSRestController
      *     default="10",
      *     description="Maximum number of products per page."
      * )
+     * 
+     * @Cache(maxage="3600", public=true, mustRevalidate=true)
      */
-    public function listAction(ParamFetcherInterface $paramFetcher, Request $request, SerializerInterface $serializer)
+    public function listAction(ParamFetcherInterface $paramFetcher, Request $request, PaginationHandler $paginationHandler)
     {
-        $paginatedRepresentation = $this->customerRepository->search(
-            $paramFetcher->get('page'),
-            $paramFetcher->get('limit'),
+        $paginatedRepresentation = $paginationHandler->paginate(
+            'customer', 
+            $paramFetcher->get('page'), 
+            $paramFetcher->get('limit'), 
             $request->get('_route'),
             $this->getUser()
         );
-        $data = $serializer->serialize($paginatedRepresentation, 'json', SerializationContext::create()->setGroups(['Default', 'customers_list']));
-        $response = new Response($data);
-        $response->headers->set('Content-Type', 'application/json');
 
-        return $response;
+        return $paginatedRepresentation;
     }
 
     /**
@@ -108,15 +113,9 @@ class CustomerController extends AbstractFOSRestController
      * )
      * @ParamConverter("customer", converter="fos_rest.request_body")
      */
-    public function createAction(Customer $customer, ConstraintViolationList $violations)
+    public function createAction(Customer $customer, ConstraintViolationList $violations, ConstraintsViolationHandler $constraintsViolationHandler)
     {
-        if (count($violations)) {
-            $message = 'The JSON sent contains invalid data. Here are the errors you need to correct: ';
-            foreach ($violations as $violation) {
-                $message .= sprintf("Field %s: %s ", $violation->getPropertyPath(), $violation->getMessage());
-            }
-            throw new ResourceValidationException($message);
-        }
+        $constraintsViolationHandler->validate($violations);
 
         $customers = $this->customerRepository->findBy(['client' => $this->getUser()]);
 

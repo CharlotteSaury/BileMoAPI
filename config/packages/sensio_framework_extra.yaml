@@ -3,3 +3,4 @@ sensio_framework_extra:
         annotations: true
     view: { annotations: false }
     request: { converters: true }
+    cache: { annotations: true }
