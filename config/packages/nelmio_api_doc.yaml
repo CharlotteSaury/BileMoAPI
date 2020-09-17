@@ -1,9 +1,21 @@
 nelmio_api_doc:
     documentation:
         info:
-            title: My App
-            description: This is an awesome app!
+            title: BileMoAPI's documentation
+            description: 
+                This API provides a catalogue of smartphone. 
+                Access is restricted to BileMo client's by JWT authentication.
+                The following interactive documentation will help BileMo's client to familiarise with the API and show you how to consume the different resources that are available. This documentation provides all information needed to use the API and provides examples for all resources.
             version: 1.0.0
+        components:
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+        security:
+            - Bearer: []
     areas: # to filter documented areas
         path_patterns:
             - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+    

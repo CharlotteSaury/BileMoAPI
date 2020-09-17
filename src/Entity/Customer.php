@@ -33,7 +33,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          absolute = true
  *      ),
  *      exclusion = @Hateoas\Exclusion(
- *          groups = {"customer", "customers_list"},
+ *          groups = {"customer"},
  *          excludeIf = "expr(not is_granted('ROLE_ADMIN'))"
  *      )
  * )
@@ -66,7 +66,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *      "client",
  *      embedded = @Hateoas\Embedded("expr(object.getClient())"),
  *      exclusion = @Hateoas\Exclusion(
- *          groups = {"customer", "customers_list"},
+ *          groups = {"customer"},
  *          excludeIf = "expr(not is_granted('ROLE_ADMIN'))"
  *      )
  * )
@@ -139,8 +139,6 @@ class Customer
     /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="customers", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
-     * @Expose
-     * @Groups({"customer", "customers_list"})
      * 
      * @Since("1.0")
      */

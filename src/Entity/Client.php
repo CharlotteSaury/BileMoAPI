@@ -14,6 +14,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Swagger\Annotations as SWG;
 
 /**
  * @ORM\Entity(repositoryClass=ClientRepository::class)
@@ -71,7 +72,7 @@ class Client implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Expose
-     * @Groups({"client", "clients_list"})
+     * @Groups({"customer", "client", "clients_list"})
      * 
      * @Since("1.0")
      */
@@ -83,7 +84,9 @@ class Client implements UserInterface
      * @Assert\NotBlank
      * @Assert\Email
      * @Expose
-     * @Groups({"customer", "client", "clients_list"})
+     * @Groups({"client", "clients_list", "login"})
+     * 
+     * @SWG\Property(description="Email address of client")
      * 
      * @Since("1.0")
      */
@@ -100,7 +103,9 @@ class Client implements UserInterface
      *      maxMessage="Password should not contain more than 30 characters"
      * )
      * @Expose
-     * @Groups({"client_create"})
+     * @Groups({"login"})
+     * 
+     * @SWG\Property(description="Password of client")
      * 
      * @Since("1.0")
      * 
@@ -112,6 +117,8 @@ class Client implements UserInterface
      * @Expose
      * @Groups({"client", "clients_list"})
      * 
+     * @SWG\Property(description="Client's creation date")
+     * 
      * @Since("1.0")
      */
     private $createdAt;
@@ -119,6 +126,8 @@ class Client implements UserInterface
     /**
      * @ORM\Column(type="json")
      * @Groups({"client"})
+     * 
+     * @SWG\Property(description="Client's role")
      * 
      * @Since("1.0")
      */
@@ -136,7 +145,9 @@ class Client implements UserInterface
      * )
      * 
      * @Expose
-     * @Groups({"customer", "customers_list", "client", "clients_list"})
+     * @Groups({"customer", "client", "clients_list"})
+     * 
+     * @SWG\Property(description="Client's company name")
      * 
      * @Since("1.0")
      */
@@ -146,6 +157,8 @@ class Client implements UserInterface
      * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="client", orphanRemoval=true)
      * @Expose
      * @Groups({"client"})
+     * 
+     * @SWG\Property(description="Client's related customers")
      * 
      * @Since("1.0")
      */

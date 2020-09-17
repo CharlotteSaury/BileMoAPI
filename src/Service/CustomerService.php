@@ -4,21 +4,17 @@ namespace App\Service;
 
 use DateTime;
 use App\Entity\Client;
-use App\Entity\Product;
 use App\Entity\Customer;
 use App\Handler\PaginationHandler;
-use App\Repository\ProductRepository;
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Handler\ConstraintsViolationHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\HttpFoundation\Response;
+use App\Exception\ResourceValidationException;
 use FOS\RestBundle\Request\ParamFetcherInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class CustomerService
 {
@@ -87,12 +83,7 @@ class CustomerService
         $customers = $this->customerRepository->findBy(['client' => $client]);
         foreach ($customers as $currentCustomer) {
             if ($currentCustomer->getEmail() === $customer->getEmail()) {
-                return new JsonResponse([
-                    'code' => 400,
-                    'message' => 'This customer is already associated to this client'
-                    ],
-                    Response::HTTP_BAD_REQUEST
-                );
+                throw new ResourceValidationException('This customer is already associated to this client');
             }
         }
 

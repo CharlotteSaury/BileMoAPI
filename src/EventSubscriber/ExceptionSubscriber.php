@@ -19,7 +19,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
     {
         $exception = $event->getThrowable();
         if ($exception instanceof NotFoundHttpException) {
-            $message = 'This route or resource does not exist';
+            $message = 'Object not found: Invalid route or resource ID';
             $status = $exception->getStatusCode();
         } elseif ($exception instanceof MethodNotAllowedHttpException) {
             $message = "This method is not allowed for this route";
