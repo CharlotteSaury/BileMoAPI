@@ -95,7 +95,7 @@ class ProductController extends AbstractFOSRestController
      *      serializerGroups={"products_list"}
      * )
      * 
-     * @Cache(maxage="15", public=true, mustRevalidate=true)
+     * @Cache(maxage="3600", public=true, mustRevalidate=true)
      * 
      * @Rest\QueryParam(
      *     name="page",
