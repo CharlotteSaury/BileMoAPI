@@ -10,7 +10,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Handler\ConstraintsViolationHandler;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Request\ParamFetcherInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -41,21 +44,24 @@ class ClientService
      */
     private $encoder;
 
-    public function __construct(PaginationHandler $paginationHandler, EntityManagerInterface $entityManager, ClientRepository $clientRepository, ConstraintsViolationHandler $constraintsViolationHandler, UserPasswordEncoderInterface $encoder)
+    private $validator;
+
+    public function __construct(ValidatorInterface $validator, PaginationHandler $paginationHandler, EntityManagerInterface $entityManager, ClientRepository $clientRepository, ConstraintsViolationHandler $constraintsViolationHandler, UserPasswordEncoderInterface $encoder)
     {
         $this->clientRepository = $clientRepository;
         $this->entityManager = $entityManager;
         $this->paginationHandler = $paginationHandler;
         $this->constraintsViolationHandler = $constraintsViolationHandler;
         $this->encoder = $encoder;
+        $this->validator = $validator;
     }
 
     public function handleList(ParamFetcherInterface $paramFetcher, Request $request)
     {
         $paginatedRepresentation = $this->paginationHandler->paginate(
-            'client', 
-            $paramFetcher->get('page'), 
-            $paramFetcher->get('limit'), 
+            'client',
+            $paramFetcher->get('page'),
+            $paramFetcher->get('limit'),
             $request->get('_route')
         );
         return $paginatedRepresentation;
@@ -87,20 +93,44 @@ class ClientService
     public function handleUpdate(Client $client, Request $request)
     {
         $data = json_decode($request->getContent());
-
         foreach ($data as $key => $value) {
-            if ($key && !empty($value)) {
-                if ($key == 'password') {
-                    $hashedPassword = $this->encoder->encodePassword($client, $value);
-                    $client->setPassword($hashedPassword);
-                } elseif (in_array($key, ['email', 'company'])) {
-                    $setter = 'set' . ucfirst($key);
-                    $client->$setter($value);
-                } else {
-                    throw new AccessDeniedHttpException();
-                }
+            if (in_array($key, Client::ATTRIBUTES)) {
+                $setter = 'set' . ucfirst($key);
+                $client->$setter($value);
+            } else {
+                throw new AccessDeniedHttpException();
             }
         }
+        $errors = $this->validator->validate($client);
+        for ($i = 0; $i < $errors->count(); $i++) {
+            if ($errors->get($i)->getPropertyPath() === 'password') {
+                $errors->remove($i);
+            }
+        }
+        $this->constraintsViolationHandler->validate($errors);
         $this->entityManager->flush();
+        return $client;
+    }
+
+    public function handlePasswordUpdate(Client $client, Request $request)
+    {
+        $passwordConstraint = new Assert\Length(["min" => 6, "max" => 30]);
+        $data = json_decode($request->getContent(), true);
+
+        if (array_key_exists('password', $data)) {
+            $errors = $this->validator->validate(
+                $data['password'],
+                $passwordConstraint
+            );
+            $this->constraintsViolationHandler->validate($errors);
+
+            $hashedPassword = $this->encoder->encodePassword($client, $data['password']);
+            $client->setPassword($hashedPassword);
+
+            $this->entityManager->flush();
+            return $client;
+        } else {
+            throw new BadRequestException('Field password is missing.');
+        }
     }
 }

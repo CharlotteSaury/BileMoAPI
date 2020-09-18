@@ -67,6 +67,7 @@ use Swagger\Annotations as SWG;
  */
 class Client implements UserInterface
 {
+    const ATTRIBUTES = ['email', 'company'];
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

@@ -294,15 +294,17 @@ class ClientController extends AbstractFOSRestController
      *      requirements = {"id" = "\d+"}
      * )
      * @Rest\View(
+     *      serializerGroups={"client"},
      *      StatusCode = 200
      * )
+     * 
      * @IsGranted("MANAGE", subject="client")
      * 
      * @SWG\Put(
-     *     description="Update a BileMo's client (Restricted to admin)",
+     *     description="Update a BileMo's client - email and company name (Restricted to admin)",
      *     tags = {"Client"},
      *     @SWG\Response(
-     *          response=201,
+     *          response=200,
      *          description="Successful operation: Updated",
      *          @Model(type=Client::class)
      *     ),
@@ -329,6 +331,7 @@ class ClientController extends AbstractFOSRestController
      *          description="Client's characteristics to be updated",
      *          @SWG\Schema(
      *              type="array",
+     *              example= {"email": "newemail@email.com", "company": "newname"},
      *              @Model(type=Client::class)
      *          )
      *     ),
@@ -344,6 +347,70 @@ class ClientController extends AbstractFOSRestController
     public function updateAction(Client $client, Request $request)
     {
         $updatedClient = $this->clientService->handleUpdate($client, $request);
+        return $updatedClient;
+    }
+
+    /**
+     * Allow client to update their password
+     * 
+     * @Rest\Put(
+     *      path = "/api/clients/{id}/password",
+     *      name = "app_clients_password",
+     *      requirements = {"id" = "\d+"}
+     * )
+     * @Rest\View(
+     *      serializerGroups={"client"},
+     *      StatusCode = 200
+     * )
+     * @IsGranted("MANAGE", subject="client")
+     * 
+     * @SWG\Put(
+     *     description="Update client's own password",
+     *     tags = {"Client"},
+     *     @SWG\Response(
+     *          response=200,
+     *          description="Successful operation: Updated",
+     *          @Model(type=Client::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Bad Request: This method is not allowed for this route OR Could not decode JSON, syntax error - malformed JSON. OR The JSON sent contains invalid data. Here are the errors you need to correct: XX",
+     *     ),
+     *     @SWG\Response(
+     *         response="401",
+     *         description="Unauthorized: Expired JWT Token/JWT Token not found",
+     *     ),
+     *     @SWG\Response(
+     *          response="403",
+     *          description="Forbidden: You are not allowed to access to this page"),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Object not found: Invalid route or resource ID",
+     *     ),
+     *     @SWG\Parameter(
+     *          name="Body",
+     *          required= true,
+     *          in="body",
+     *          type="string",
+     *          description="Client's characteristics to be updated",
+     *          @SWG\Schema(
+     *              type="array",
+     *              example={"password": "newpassword"},
+     *              @Model(type=Client::class)
+     *          )
+     *     ),
+     *     @SWG\Parameter(
+     *          name="Authorization",
+     *          required= true,
+     *          in="header",
+     *          type="string",
+     *          description="Bearer JWT Token",
+     *     )
+     * )
+     */
+    public function updatePassAction(Client $client, Request $request)
+    {
+        $updatedClient = $this->clientService->handlePasswordUpdate($client, $request);
         return $updatedClient;
     }
 }
