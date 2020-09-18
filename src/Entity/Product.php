@@ -135,16 +135,7 @@ class Product
     private $createdAt;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     * @Expose
-     * @Groups({"product", "products_list"})
-     * 
-     * @Since("1.0")
-     */
-    private $updatedAt;
-
-    /**
-     * @ORM\Column(type="float", length=255)
+     * @ORM\Column(type="float")
      * 
      * @Assert\NotBlank
      * @Assert\Positive
@@ -319,21 +310,6 @@ class Product
     /**
      * @ORM\Column(type="boolean", nullable=true)
      * 
-     * @Assert\Type(
-     *      type="bool",
-     *      message="This value should be a boolean"
-     * )
-     * 
-     * @Expose
-     * @Groups({"product", "products_list"})
-     * 
-     * @Since("1.0")
-     */
-    private $lte4G;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     * 
      * @Assert\NotNull
      * @Assert\Type(
      *      type="bool",
@@ -346,22 +322,6 @@ class Product
      * @Since("1.0")
      */
     private $camera;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     * 
-     * @Assert\NotNull
-     * @Assert\Type(
-     *      type="bool",
-     *      message="This value should be a boolean"
-     * )
-     * 
-     * @Expose
-     * @Groups({"product", "products_list"})
-     * 
-     * @Since("1.0")
-     */
-    private $nfc;
 
     /**
      * @ORM\OneToMany(targetEntity=Configuration::class, mappedBy="product", orphanRemoval=true, cascade={"persist"})

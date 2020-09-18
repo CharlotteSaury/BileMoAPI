@@ -1,0 +1,7 @@
+App\Entity\Image:
+  image1:
+    url: https://www.image.com/image
+    configuration: '@configuration1'
+  image2:
+    url: https://www.image.com/image2
+    configuration: '@configuration1'

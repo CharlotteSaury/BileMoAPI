@@ -1,0 +1,7 @@
+App\Entity\Customer:
+  customer1:
+    email: customer1@email.com
+    first_name: cust1
+    last_name: omer1
+    created_at: <datetime()>
+    client: '@client1'
