@@ -60,6 +60,9 @@ class ClientTest extends KernelTestCase
      */
     public function testInvalidUniqueEmail()
     {
+        $this->loadFixtureFiles([
+            dirname(__DIR__).'/fixtures/clients.yaml'
+        ]);
         $invalidClient = $this->getEntity()->setEmail('client1@email.com');
         $this->assertHasErrors($invalidClient, 1);
     }

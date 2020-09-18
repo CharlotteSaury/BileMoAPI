@@ -38,7 +38,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
         } 
 
         $data = [
-            'status' => $status,
+            'code' => $status,
             'message' => $message
         ];
 
