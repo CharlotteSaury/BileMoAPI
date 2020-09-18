@@ -41,9 +41,9 @@ class ClientController extends AbstractFOSRestController
      *      serializerGroups={"client"}
      * )
      * 
-     * @Cache(maxage="3600", public=true, mustRevalidate=true)
+     * @Cache(maxage="3600", public=false, mustRevalidate=true)
      * 
-     * IsGranted("MANAGE", subject="client")
+     * @IsGranted("MANAGE", subject="client")
      * 
      * @SWG\Get(
      *     description="List the characteristics of the specified client (Restricted to admin)",
@@ -95,7 +95,7 @@ class ClientController extends AbstractFOSRestController
      * )
      * @Rest\View()
      * 
-     * @Cache(maxage="3600", public=true, mustRevalidate=true)
+     * @Cache(maxage="3600", public=false, mustRevalidate=true)
      * 
      * @Rest\QueryParam(
      *     name="page",
@@ -109,7 +109,8 @@ class ClientController extends AbstractFOSRestController
      *     default="10",
      *     description="Maximum number of clients per page."
      * )
-     * IsGrante("ROLE_ADMIN")
+     * 
+     * @IsGranted("ROLE_ADMIN")
      * 
      * @SWG\Get(
      *     description="List all BileMo's clients (Restricted to admin)",
