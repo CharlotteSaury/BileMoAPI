@@ -26,9 +26,7 @@ class ProductFixtures extends Fixture
             'Wifi',
             'Video4K',
             'Bluetooth',
-            'Lte4G',
-            'Camera',
-            'Nfc'
+            'Camera'
         ];
 
         $manufacturers = [
@@ -54,7 +52,6 @@ class ProductFixtures extends Fixture
             $product->setName($faker->word)
                 ->setDescription($faker->paragraph)
                 ->setCreatedAt($date)
-                ->setUpdatedAt($date)
                 ->setLength($faker->randomFloat(2,12,15))
                 ->setWidth($faker->randomFloat(2,6,10))
                 ->setHeight($faker->randomFloat(2,0.7,1.5))

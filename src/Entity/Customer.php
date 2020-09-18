@@ -73,6 +73,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Customer
 {
+    const ATTRIBUTES = ['email', 'firstname', 'lastname'];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -109,7 +111,7 @@ class Customer
      * 
      * @Since("1.0")
      */
-    private $firstName;
+    private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -125,7 +127,7 @@ class Customer
      * 
      * @Since("1.0")
      */
-    private $lastName;
+    private $lastname;
 
     /**
      * @ORM\Column(type="datetime")
@@ -161,26 +163,26 @@ class Customer
         return $this;
     }
 
-    public function getFirstName(): ?string
+    public function getFirstname(): ?string
     {
-        return $this->firstName;
+        return $this->firstname;
     }
 
-    public function setFirstName(string $firstName): self
+    public function setFirstname(string $firstname): self
     {
-        $this->firstName = $firstName;
+        $this->firstname = $firstname;
 
         return $this;
     }
 
-    public function getLastName(): ?string
+    public function getLastname(): ?string
     {
-        return $this->lastName;
+        return $this->lastname;
     }
 
-    public function setLastName(string $lastName): self
+    public function setLastname(string $lastname): self
     {
-        $this->lastName = $lastName;
+        $this->lastname = $lastname;
 
         return $this;
     }

@@ -41,7 +41,7 @@ class CustomerController extends AbstractFOSRestController
      *      serializerGroups={"customer"}
      * )
      *
-     * @Cache(maxage="3600", public=true, mustRevalidate=true)
+     * @Cache(maxage="3600", public=false, mustRevalidate=true)
      * 
      * @IsGranted("MANAGE", subject="customer")
      * 
@@ -107,7 +107,7 @@ class CustomerController extends AbstractFOSRestController
      *     description="Maximum number of products per page."
      * )
      * 
-     * @Cache(maxage="3600", public=true, mustRevalidate=true)
+     * @Cache(maxage="3600", public=false, mustRevalidate=true)
      * 
      * @SWG\Get(
      *     description="List customers associated to authenticated client",
@@ -201,7 +201,7 @@ class CustomerController extends AbstractFOSRestController
      *          description="All customer characteristics",
      *          @SWG\Schema(
      *              type="array",
-     *              example={"email": "customer@email.com", "first_name": "Martin", "last_name": "Dupond"},
+     *              example={"email": "customer@email.com", "firstname": "Martin", "lastname": "Dupond"},
      *              @Model(type=Customer::class)
      *          )
      *     ),
@@ -278,5 +278,70 @@ class CustomerController extends AbstractFOSRestController
     public function deleteAction(Request $request)
     {
         $this->customerService->handleDelete($request);
+    }
+
+    /**
+     * Update a customer
+     * 
+     * @Rest\Put(
+     *      path = "/api/customers/{id}",
+     *      name = "app_customerss_update",
+     *      requirements = {"id" = "\d+"}
+     * )
+     * @Rest\View(
+     *      serializerGroups={"customer"},
+     *      StatusCode = 200
+     * )
+     * 
+     * @IsGranted("MANAGE", subject="customer")
+     * 
+     * @SWG\Put(
+     *     description="Partially or totally update a customer.",
+     *     tags = {"Customer"},
+     *     @SWG\Response(
+     *          response=200,
+     *          description="Successful operation: Updated",
+     *          @Model(type=Customer::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Bad Request: This method is not allowed for this route OR Could not decode JSON, syntax error - malformed JSON. OR The JSON sent contains invalid data. Here are the errors you need to correct: XX",
+     *     ),
+     *     @SWG\Response(
+     *         response="401",
+     *         description="Unauthorized: Expired JWT Token/JWT Token not found",
+     *     ),
+     *     @SWG\Response(
+     *          response="403",
+     *          description="Forbidden: You are not allowed to access to this page"),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Object not found: Invalid route or resource ID",
+     *     ),
+     *     @SWG\Parameter(
+     *          name="Body",
+     *          required= true,
+     *          in="body",
+     *          type="string",
+     *          description="Customer characteristics to be updated",
+     *          @SWG\Schema(
+     *              type="array",
+     *              example= {"email": "newemail@email.com", "firstname": "newname", "lastname": "newlastname"},
+     *              @Model(type=Customer::class)
+     *          )
+     *     ),
+     *     @SWG\Parameter(
+     *          name="Authorization",
+     *          required= true,
+     *          in="header",
+     *          type="string",
+     *          description="Bearer JWT Token",
+     *     )
+     * )
+     */
+    public function updateAction(Customer $customer, Request $request)
+    {
+        $updatedCustomer = $this->customerService->handleUpdate($customer, $request);
+        return $updatedCustomer;
     }
 }

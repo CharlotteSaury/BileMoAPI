@@ -384,18 +384,6 @@ class Product
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
     public function getScreen(): ?string
     {
         return $this->screen;
@@ -504,18 +492,6 @@ class Product
         return $this;
     }
 
-    public function getLte4G(): ?bool
-    {
-        return $this->lte4G;
-    }
-
-    public function setLte4G(?bool $lte4G): self
-    {
-        $this->lte4G = $lte4G;
-
-        return $this;
-    }
-
     public function getCamera(): ?bool
     {
         return $this->camera;
@@ -524,18 +500,6 @@ class Product
     public function setCamera(?bool $camera): self
     {
         $this->camera = $camera;
-
-        return $this;
-    }
-
-    public function getNfc(): ?bool
-    {
-        return $this->nfc;
-    }
-
-    public function setNfc(?bool $nfc): self
-    {
-        $this->nfc = $nfc;
 
         return $this;
     }

@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\Security;
 use App\Exception\ResourceValidationException;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class CustomerService
@@ -43,13 +44,19 @@ class CustomerService
      */
     private $security;
 
-    public function __construct(Security $security, PaginationHandler $paginationHandler, EntityManagerInterface $entityManager, CustomerRepository $customerRepository, ConstraintsViolationHandler $constraintsViolationHandler)
+    /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    public function __construct(ValidatorInterface $validator, Security $security, PaginationHandler $paginationHandler, EntityManagerInterface $entityManager, CustomerRepository $customerRepository, ConstraintsViolationHandler $constraintsViolationHandler)
     {
         $this->security = $security;
         $this->customerRepository = $customerRepository;
         $this->entityManager = $entityManager;
         $this->paginationHandler = $paginationHandler;
         $this->constraintsViolationHandler = $constraintsViolationHandler;
+        $this->validator = $validator;
     }
 
     public function handleList(ParamFetcherInterface $paramFetcher, Request $request, Client $client)
@@ -92,6 +99,23 @@ class CustomerService
         $this->entityManager->persist($customer);
         $this->entityManager->flush();
 
+        return $customer;
+    }
+
+    public function handleUpdate(Customer $customer, Request $request)
+    {
+        $data = json_decode($request->getContent());
+        foreach ($data as $key => $value) {
+            if (in_array($key, Customer::ATTRIBUTES)) {
+                $setter = 'set' . ucfirst($key);
+                $customer->$setter($value);
+            } else {
+                throw new AccessDeniedHttpException();
+            }
+        }
+        $errors = $this->validator->validate($customer);
+        $this->constraintsViolationHandler->validate($errors);
+        $this->entityManager->flush();
         return $customer;
     }
 }

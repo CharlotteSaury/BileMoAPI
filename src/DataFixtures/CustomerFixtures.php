@@ -18,8 +18,8 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
             $customer = new Customer();
             $customer->setEmail($faker->email)
                 ->setCreatedAt($faker->dateTime())
-                ->setFirstName($faker->firstName)
-                ->setLastName($faker->lastName)
+                ->setFirstname($faker->firstName)
+                ->setLastname($faker->lastName)
                 ->setClient($this->getReference('client'.mt_rand(0, 19)));
 
             $manager->persist($customer);
