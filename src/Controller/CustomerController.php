@@ -41,7 +41,7 @@ class CustomerController extends AbstractFOSRestController
      *      serializerGroups={"customer"}
      * )
      *
-     * @Cache(maxage="3600", public=true, mustRevalidate=true)
+     * @Cache(maxage="3600", public=private, mustRevalidate=true)
      * 
      * @IsGranted("MANAGE", subject="customer")
      * 
@@ -107,7 +107,7 @@ class CustomerController extends AbstractFOSRestController
      *     description="Maximum number of products per page."
      * )
      * 
-     * @Cache(maxage="3600", public=true, mustRevalidate=true)
+     * @Cache(maxage="3600", public=private, mustRevalidate=true)
      * 
      * @SWG\Get(
      *     description="List customers associated to authenticated client",
