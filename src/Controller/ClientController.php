@@ -298,7 +298,7 @@ class ClientController extends AbstractFOSRestController
      *      StatusCode = 200
      * )
      * 
-     * @IsGranted("MANAGE", subject="client")
+     * @IsGranted("ROLE_ADMIN")
      * 
      * @SWG\Put(
      *     description="Update a BileMo's client - email and company name (Restricted to admin)",
@@ -392,7 +392,7 @@ class ClientController extends AbstractFOSRestController
      *          required= true,
      *          in="body",
      *          type="string",
-     *          description="Client's characteristics to be updated",
+     *          description="New password",
      *          @SWG\Schema(
      *              type="array",
      *              example={"password": "newpassword"},
