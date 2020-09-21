@@ -62,6 +62,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Product
 {
+
+    const ATTRIBUTES = ['name', 'description', 'screen', 'das', 'weight', 'length', 'width', 'height', 'wifi', 'video4k', 'bluetooth', 'camera', 'manufacturer'];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

@@ -11,6 +11,8 @@ use App\Handler\ConstraintsViolationHandler;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class ProductService
 {
@@ -34,12 +36,19 @@ class ProductService
      */
     private $productRepository;
 
-    public function __construct(PaginationHandler $paginationHandler, EntityManagerInterface $entityManager, ProductRepository $productRepository, ConstraintsViolationHandler $constraintsViolationHandler)
+    /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+
+    public function __construct(PaginationHandler $paginationHandler, EntityManagerInterface $entityManager, ProductRepository $productRepository, ConstraintsViolationHandler $constraintsViolationHandler, ValidatorInterface $validator)
     {
         $this->productRepository = $productRepository;
         $this->entityManager = $entityManager;
         $this->paginationHandler = $paginationHandler;
         $this->constraintsViolationHandler = $constraintsViolationHandler;
+        $this->validator = $validator;
     }
 
     public function handleList(ParamFetcherInterface $paramFetcher, Request $request)

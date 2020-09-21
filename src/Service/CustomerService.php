@@ -109,8 +109,6 @@ class CustomerService
             if (in_array($key, Customer::ATTRIBUTES)) {
                 $setter = 'set' . ucfirst($key);
                 $customer->$setter($value);
-            } else {
-                throw new AccessDeniedHttpException();
             }
         }
         $errors = $this->validator->validate($customer);

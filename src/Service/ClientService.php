@@ -44,6 +44,9 @@ class ClientService
      */
     private $encoder;
 
+    /**
+     * @var ValidatorInterface
+     */
     private $validator;
 
     public function __construct(ValidatorInterface $validator, PaginationHandler $paginationHandler, EntityManagerInterface $entityManager, ClientRepository $clientRepository, ConstraintsViolationHandler $constraintsViolationHandler, UserPasswordEncoderInterface $encoder)

@@ -285,7 +285,7 @@ class CustomerController extends AbstractFOSRestController
      * 
      * @Rest\Put(
      *      path = "/api/customers/{id}",
-     *      name = "app_customerss_update",
+     *      name = "app_customers_update",
      *      requirements = {"id" = "\d+"}
      * )
      * @Rest\View(
