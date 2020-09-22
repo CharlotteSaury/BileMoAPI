@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Expose;
@@ -24,18 +26,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          absolute = true
  *      ),
  *      exclusion = @Hateoas\Exclusion(groups = {"customer", "customers_list", "client"})
- * )
- * @Hateoas\Relation(
- *      "client",
- *      href = @Hateoas\Route(
- *          "app_clients_show",
- *          parameters={"id"="expr(object.getClient().getId())"},
- *          absolute = true
- *      ),
- *      exclusion = @Hateoas\Exclusion(
- *          groups = {"customer"},
- *          excludeIf = "expr(not is_granted('ROLE_ADMIN'))"
- *      )
  * )
  * @Hateoas\Relation(
  *      "list",
@@ -63,8 +53,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *      exclusion = @Hateoas\Exclusion(groups = {"customer", "customers_list"})
  * )
  * @Hateoas\Relation(
- *      "client",
- *      embedded = @Hateoas\Embedded("expr(object.getClient())"),
+ *      "clients",
+ *      embedded = @Hateoas\Embedded("expr(object.getClients())"),
  *      exclusion = @Hateoas\Exclusion(
  *          groups = {"customer"},
  *          excludeIf = "expr(not is_granted('ROLE_ADMIN'))"
@@ -139,12 +129,16 @@ class Customer
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="customers", cascade={"persist"}, fetch="EAGER")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToMany(targetEntity=Client::class, mappedBy="customers")
      * 
      * @Since("1.0")
      */
-    private $client;
+    private $clients;
+
+    public function __construct()
+    {
+        $this->clients = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -199,14 +193,30 @@ class Customer
         return $this;
     }
 
-    public function getClient(): ?Client
+    /**
+     * @return Collection|Client[]
+     */
+    public function getClients(): Collection
     {
-        return $this->client;
+        return $this->clients;
     }
 
-    public function setClient(?Client $client): self
+    public function addClient(Client $client): self
     {
-        $this->client = $client;
+        if (!$this->clients->contains($client)) {
+            $this->clients[] = $client;
+            $client->addCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClient(Client $client): self
+    {
+        if ($this->clients->contains($client)) {
+            $this->clients->removeElement($client);
+            $client->removeCustomer($this);
+        }
 
         return $this;
     }

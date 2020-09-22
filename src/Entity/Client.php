@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use DateTime;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ClientRepository;
 use JMS\Serializer\Annotation\Since;
@@ -155,7 +156,8 @@ class Client implements UserInterface
     private $company;
 
     /**
-     * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="client", orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity=Customer::class, inversedBy="clients")
+     * 
      * @Expose
      * @Groups({"client"})
      * 
@@ -167,8 +169,8 @@ class Client implements UserInterface
 
     public function __construct()
     {
-        $this->customers = new ArrayCollection();
         $this->createdAt = new DateTime();
+        $this->customers = new ArrayCollection();
 
     }
 
@@ -245,9 +247,9 @@ class Client implements UserInterface
     }
 
     /**
-     * @return ArrayCollection|Customer[]
+     * @return Collection|Customer[]
      */
-    public function getCustomers(): ArrayCollection
+    public function getCustomers(): Collection
     {
         return $this->customers;
     }
@@ -256,7 +258,6 @@ class Client implements UserInterface
     {
         if (!$this->customers->contains($customer)) {
             $this->customers[] = $customer;
-            $customer->setClient($this);
         }
 
         return $this;
@@ -266,15 +267,10 @@ class Client implements UserInterface
     {
         if ($this->customers->contains($customer)) {
             $this->customers->removeElement($customer);
-            // set the owning side to null (unless already changed)
-            if ($customer->getClient() === $this) {
-                $customer->setClient(null);
-            }
         }
 
         return $this;
     }
-
 
     /**
      * Returns the salt that was originally used to encode the password.

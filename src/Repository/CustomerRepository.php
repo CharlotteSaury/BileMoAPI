@@ -24,8 +24,8 @@ class CustomerRepository extends AbstractRepository
     {
         $builder = $this
             ->createQueryBuilder('c')
-            ->select('c')
-            ->andWhere('c.client = :val')
+            ->leftJoin('c.clients', 'clients')
+            ->andWhere('clients = :val')
             ->setParameter('val', $client)
             ;
 

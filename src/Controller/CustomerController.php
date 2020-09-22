@@ -277,7 +277,7 @@ class CustomerController extends AbstractFOSRestController
      */
     public function deleteAction(Request $request)
     {
-        $this->customerService->handleDelete($request);
+        $this->customerService->handleDelete($request, $this->getUser());
     }
 
     /**

@@ -53,7 +53,7 @@ class CustomerVoter extends Voter
 
     public function canManage(Customer $customer, Client $client)
     {
-        return $client === $customer->getClient();
+        return $customer->getClients()->contains($client);
     }
 }
 

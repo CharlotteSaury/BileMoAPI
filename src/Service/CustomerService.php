@@ -62,44 +62,49 @@ class CustomerService
     public function handleList(ParamFetcherInterface $paramFetcher, Request $request, Client $client)
     {
         $paginatedRepresentation = $this->paginationHandler->paginate(
-            'customer', 
-            $paramFetcher->get('page'), 
-            $paramFetcher->get('limit'), 
+            'customer',
+            $paramFetcher->get('page'),
+            $paramFetcher->get('limit'),
             $request->get('_route'),
             $client
         );
         return $paginatedRepresentation;
     }
 
-    public function handleDelete(Request $request)
+    public function handleDelete(Request $request, Client $client)
     {
         $customer = $this->customerRepository->findOneBy(['id' => $request->get('id')]);
         if ($customer) {
             if (!$this->security->isGranted('MANAGE', $customer)) {
                 throw new AccessDeniedHttpException();
             }
-            $this->entityManager->remove($customer);
+            if ($customer->getClients()->contains($client)){
+                $customer->removeClient($client);
+            } else {
+                $this->entityManager->remove($customer);
+            }
             $this->entityManager->flush();
         }
     }
 
     public function handleCreate(Customer $customer, ConstraintViolationList $violations, Client $client)
     {
-        $this->constraintsViolationHandler->validate($violations);
+        $existingCustomer = $this->customerRepository->findOneBy(['email' => $customer->getEmail()]);
+        if (!$existingCustomer) {
+            $this->constraintsViolationHandler->validate($violations);
+            $customer->addClient($client);
+            $customer->setCreatedAt(new DateTime());
+            $this->entityManager->persist($customer);
+            $this->entityManager->flush();
 
-        $customers = $this->customerRepository->findBy(['client' => $client]);
-        foreach ($customers as $currentCustomer) {
-            if ($currentCustomer->getEmail() === $customer->getEmail()) {
-                throw new ResourceValidationException('This customer is already associated to this client');
-            }
+            return $customer;
         }
-
-        $customer->setClient($client);
-        $customer->setCreatedAt(new DateTime());
-        $this->entityManager->persist($customer);
+        if ($existingCustomer->getClients()->contains($client)) {
+            throw new ResourceValidationException('This customer is already associated to this client');
+        }
+        $existingCustomer->addClient($client);
         $this->entityManager->flush();
-
-        return $customer;
+        return $existingCustomer;
     }
 
     public function handleUpdate(Customer $customer, Request $request)
