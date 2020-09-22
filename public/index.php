@@ -26,7 +26,7 @@ if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? false) {
 
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
 
-if ('dev' === $kernel->getEnvironment()) {
+if ('prod' === $kernel->getEnvironment()) {
     $kernel = new CacheKernel($kernel);
 }
 

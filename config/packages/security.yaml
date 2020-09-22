@@ -5,6 +5,12 @@ security:
             entity:
                 class: App\Entity\Client
                 property: email
+    
+    role_hierarchy:
+        ROLE_ADMIN: 
+            - ROLE_USER
+            - ROLE_ALLOWED_TO_SWITCH
+    
     encoders:
         entity: 
             class: App\Entity\Client
@@ -29,21 +35,25 @@ security:
         api:
             pattern: ^/api
             stateless: true
+            switch_user: 
+                parameter: x-switch-user
+                role: ROLE_ALLOWED_TO_SWITCH
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
+            
         
         main:
             anonymous: true
             lazy: true
-        
         
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
             # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+            
+
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
