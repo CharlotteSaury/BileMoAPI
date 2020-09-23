@@ -2,14 +2,15 @@
 
 namespace App\Tests\Controller;
 
+use App\Tests\Utils\createAuthenticatedClient;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Validator\Constraints\Json;
 
 class SecurityControllerTest extends WebTestCase
 {
     use FixturesTrait;
+    use createAuthenticatedClient;
 
     /**
      * Test unauthorized access to unauthenticated users
