@@ -5,3 +5,9 @@ App\Entity\Customer:
     last_name: omer1
     created_at: <datetime()>
     clients: ['@client1']
+  customer2:
+    email: customer2@email.com
+    first_name: cust2
+    last_name: omer2
+    created_at: <datetime()>
+    clients: ['@client2']

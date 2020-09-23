@@ -82,14 +82,13 @@ class ClientService
     public function handleCreate(Client $client, ConstraintViolationList $violations)
     {
         $this->constraintsViolationHandler->validate($violations);
-
+        
         $client->setRoles(['ROLE_USER']);
         $client->setCreatedAt(new DateTime());
         $hashedPassword = $this->encoder->encodePassword($client, $client->getPassword());
         $client->setPassword($hashedPassword);
         $this->entityManager->persist($client);
         $this->entityManager->flush();
-
         return $client;
     }
 

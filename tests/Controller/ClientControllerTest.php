@@ -46,7 +46,7 @@ class ClientControllerTest extends WebTestCase
     }
 
     /**
-     * Test Client list request by authenticated admin
+     * Test Client details request by authenticated admin
      *
      * @return void
      */

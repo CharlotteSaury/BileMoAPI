@@ -131,6 +131,7 @@ class Customer
 
     /**
      * @ORM\ManyToMany(targetEntity=Client::class, mappedBy="customers")
+     * @Groups({"customer", "customers_list", "client"})
      * 
      * @Since("1.0")
      */
@@ -204,6 +205,9 @@ class Customer
 
     public function addClient(Client $client): self
     {
+        if($this->clients == null){
+            $this->clients = new ArrayCollection();
+        }
         if (!$this->clients->contains($client)) {
             $this->clients[] = $client;
             $client->addCustomer($this);

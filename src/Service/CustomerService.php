@@ -96,7 +96,6 @@ class CustomerService
             $customer->setCreatedAt(new DateTime());
             $this->entityManager->persist($customer);
             $this->entityManager->flush();
-
             return $customer;
         }
         if ($existingCustomer->getClients()->contains($client)) {

@@ -216,7 +216,7 @@ class CustomerController extends AbstractFOSRestController
      */
     public function createAction(Customer $customer, ConstraintViolationList $violations)
     {
-        $newCustomer = $this->customerService->handleCreate($customer, $violations, $this->getUSer());
+        $newCustomer = $this->customerService->handleCreate($customer, $violations, $this->getUser());
         
         return $this->view(
             $newCustomer,
