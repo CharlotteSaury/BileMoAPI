@@ -16,6 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
+ * @UniqueEntity(fields={"email"}, message="This customer already exists")
  * @ExclusionPolicy("all")
  * 
  * @Hateoas\Relation(

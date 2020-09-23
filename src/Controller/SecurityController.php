@@ -50,6 +50,6 @@ class SecurityController extends AbstractFOSRestController
      */
     public function login()
     {
-
+        
     }
 }

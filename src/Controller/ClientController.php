@@ -95,6 +95,8 @@ class ClientController extends AbstractFOSRestController
      * )
      * @Rest\View()
      * 
+     * @IsGranted("ROLE_ADMIN")
+     * 
      * @Cache(maxage="3600", public=false, mustRevalidate=true)
      * 
      * @Rest\QueryParam(
@@ -109,8 +111,6 @@ class ClientController extends AbstractFOSRestController
      *     default="10",
      *     description="Maximum number of clients per page."
      * )
-     * 
-     * @IsGranted("ROLE_ADMIN")
      * 
      * @SWG\Get(
      *     description="List all BileMo's clients (Restricted to admin)",
@@ -172,6 +172,7 @@ class ClientController extends AbstractFOSRestController
      *      serializerGroups={"client"}
      * )
      * @ParamConverter("client", converter="fos_rest.request_body")
+     * 
      * @IsGranted("ROLE_ADMIN")
      * 
      * @SWG\Post(
