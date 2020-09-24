@@ -1,0 +1,11 @@
+App\Entity\Configuration:
+  configuration1:
+    color: blue
+    price: 1200.2
+    memory: 64.0
+    product: '@product1'
+  configuration2:
+    memory: 32.0  
+    color: pink
+    price: 1205.3
+    product: '@product1'

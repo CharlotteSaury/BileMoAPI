@@ -1,0 +1,31 @@
+# Read the documentation: https://symfony.com/doc/master/bundles/FOSRestBundle/index.html
+fos_rest:
+#    allowed_methods_listener:  true
+#    routing_loader: true
+    view:
+        view_response_listener:  true
+        formats: { json: true, xml: false, rss: false } 
+        mime_types:
+            json: ['application/json', 'application/json;version=1.0']
+    exception:
+        enabled: true
+#            App\Exception\MyException: 403
+#        messages:
+#            App\Exception\MyException: Forbidden area.
+    format_listener:
+        rules:
+            - { path: ^/api, prefer_extension: true, fallback_format: json, priorities: [ json ] }
+            - { path: ^/, priorities: [html, '*/*'], fallback_format: ~, prefer_extension: true }
+    body_converter:
+        enabled: true
+        validate: true
+        validation_errors_argument: violations
+    serializer:
+        serialize_null: true
+    param_fetcher_listener: true
+    versioning:
+        enabled: true
+        resolvers:
+            media_type:
+                enabled: true
+                regex: '/(v|version)=(?P<version>[0-9\.]+)/'
