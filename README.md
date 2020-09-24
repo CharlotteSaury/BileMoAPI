@@ -84,24 +84,24 @@ Dependencies (require <a href="https://getcomposer.org/">Composer</a>):
 
 # Usage
 
-To test the API, you have first to get an authentication token.
-Request with POST method on http://www.bilemo.charlottesaury.fr/api/login_check with following data in request JSON body :
-For client restricted access :
+<p>To test the API, you have first to get an authentication token.</p>
+<p>Request with POST method on http://www.bilemo.charlottesaury.fr/api/login_check with following data in request JSON body :</p>
+<p>For client restricted access :</p>
 {
     "username": "user@bilemo.com",
     "password": "user"
 }
-For admin full access :
+<p>For admin full access :</p>
 {
     "username": "admin@bilemo.com",
     "password": "admin"
 }
-In response you will obtain a token.
-You will then have to add that to following request headers under the key "Authorization" and value "Bearer %token%".
+<p>In response you will obtain a token.</p>
+<p>You will then have to add that to following request headers under the key "Authorization" and value "Bearer %token%".</p>
 
 # Documentation
 
-API documentation and testing interface is available <a href="">HERE</a>
+<p>API documentation and testing interface is available <a href="">HERE</a></p>
 
 
 
