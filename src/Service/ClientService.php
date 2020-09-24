@@ -81,7 +81,6 @@ class ClientService
 
     public function handleCreate(Client $client, ConstraintViolationList $violations)
     {
-        dd($violations);
         $this->constraintsViolationHandler->validate($violations);
         
         $client->setRoles(['ROLE_USER']);

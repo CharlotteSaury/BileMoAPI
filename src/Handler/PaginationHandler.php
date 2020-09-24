@@ -57,7 +57,6 @@ class PaginationHandler
 
         $response = new Response($data);
         $response->headers->set('Content-Type', 'application/json');
-        
         return $response;
     }
 }
