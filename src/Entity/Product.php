@@ -331,6 +331,9 @@ class Product
      * 
      * @Assert\NotNull
      * @Assert\NotBlank
+     * @Assert\Count(
+     *      min = 1,
+     *      minMessage = "You must specify at least one configuration")
      * @Assert\Valid
      * 
      * @Expose

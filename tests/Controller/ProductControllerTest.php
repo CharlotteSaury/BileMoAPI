@@ -163,18 +163,7 @@ class ProductControllerTest extends WebTestCase
             "das" => 0.837,
             "weight" => 186.1,
             "length" => 14.76,
-            "configurations" => [
-                [
-                "memory" => 64,
-                "color" => "lime",
-                "price" => 1424.48,
-                "images" => [
-                        [
-                            "url" => "http://www.rodrigues.net/occaecati-ipsum-molestiae-natus-rerum-rem-necessitatibus"
-                        ]                        
-                    ]
-                ]
-            ]
+            "configurations" => []
         ];
         $client = $this->postProduct($data);
         $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());

@@ -24,10 +24,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
         } elseif ($exception instanceof MethodNotAllowedHttpException) {
             $message = "This method is not allowed for this route";
             $status = $exception->getStatusCode();
-        } elseif ($exception instanceof OutOfRangeCurrentPageException) {
-            $message = $exception->getMessage();
-            $status = 404;
-        } elseif ($exception instanceof ResourceValidationException || $exception instanceof BadRequestHttpException) {
+        } elseif ($exception instanceof ResourceValidationException || $exception instanceof BadRequestHttpException || $exception instanceof OutOfRangeCurrentPageException) {
             $message = $exception->getMessage();
             $status = 400;
         } elseif ($exception instanceof AccessDeniedHttpException) {

@@ -29,7 +29,7 @@ class ProductTest extends KernelTestCase
             ->setDescription('product description')
             ->setManufacturer('manufacturer')
             ->setCreatedAt(new \DateTime())
-            ->setScreen(0.2)
+            ->setScreen(150.235)
             ->setDas(306.734)
             ->setweight(205.243)
             ->setlength(100.245)
@@ -38,7 +38,8 @@ class ProductTest extends KernelTestCase
             ->setWifi(true)
             ->setVideo4k(true)
             ->setBluetooth(false)
-            ->setCamera(true);
+            ->setCamera(true)
+            ->addConfiguration($fixtures['configuration1']);
 
         return $product;
     }
@@ -48,7 +49,7 @@ class ProductTest extends KernelTestCase
      *
      * @return void
      */
-    public function testValidEntity()
+    public function testValidProductEntity()
     {
         $this->assertHasErrors($this->getEntity(), 0);
     }
@@ -58,7 +59,7 @@ class ProductTest extends KernelTestCase
      *
      * @return void
      */
-    public function testInvalidEntity()
+    public function testInvalidProductEntity()
     {
         $invalidProduct = $this->getEntity();
         $invalidProduct->setName('')
@@ -74,7 +75,7 @@ class ProductTest extends KernelTestCase
             ->setVideo4k(12)
             ->setBluetooth(1)
             ->setCamera(1);
-        $this->assertHasErrors($invalidProduct, 14);
+        $this->assertHasErrors($invalidProduct, 15);
     }
 
     /**
@@ -82,7 +83,7 @@ class ProductTest extends KernelTestCase
      *
      * @return void
      */
-    public function testInvalidUniqueName()
+    public function testInvalidProductUniqueName()
     {
         $invalidProduct = $this->getEntity()->setName('product1');
         $this->assertHasErrors($invalidProduct, 1);
