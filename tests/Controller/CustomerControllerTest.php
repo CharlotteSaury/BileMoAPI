@@ -15,7 +15,7 @@ class CustomerControllerTest extends WebTestCase
      *
      * @return void
      */
-    public function testMethodNotAllowed()
+    public function testCustomersMethodNotAllowed()
     {
         $routes = [
             'DELETE' => '/api/customers',
@@ -35,7 +35,7 @@ class CustomerControllerTest extends WebTestCase
      */
     public function testGetCustomers()
     {
-        $client = $this->createAuthenticatedClient('admin@bilemo.com', 'password');
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             '/api/customers'

@@ -16,7 +16,8 @@ trait createAuthenticatedClient
         $client = static::createClient();
         $this->loadFixtureFiles([
             dirname(__DIR__).'/fixtures/clients.yaml',
-            dirname(__DIR__).'/fixtures/customers.yaml'
+            dirname(__DIR__).'/fixtures/customers.yaml',
+            dirname(__DIR__).'/fixtures/products.yaml',
         ]);
         $client->request(
             'POST',

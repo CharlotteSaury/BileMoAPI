@@ -32,7 +32,7 @@ class ClientControllerTest extends WebTestCase
      *
      * @return void
      */
-    public function testMethodNotAllowed()
+    public function testClientsMethodNotAllowed()
     {
         $routes = [
             'DELETE' => '/api/clients',
