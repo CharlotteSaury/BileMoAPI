@@ -16,5 +16,6 @@ class ConstraintsViolationHandler
             }
             throw new ResourceValidationException($message);
         }
+        return;
     }
 }
