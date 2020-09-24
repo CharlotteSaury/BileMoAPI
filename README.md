@@ -1,6 +1,7 @@
 # BileMoAPI
 
 Project 7 of OpenClassrooms "PHP/Symfony app developper" course.
+Accessible online at <a href="http://www.bilemo.charlottesaury.fr">www.bilemo.charlottesaury.fr</a>
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/6d5a289025644a1d8d492ffc6deff9fb)](https://www.codacy.com/manual/CharlotteSaury/BileMoAPI?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CharlotteSaury/BileMoAPI&amp;utm_campaign=Badge_Grade)
 
@@ -26,9 +27,13 @@ API access is restricted to referenced and authenticated clients.
 # Environment : Symfony 5 project
 Dependencies (require <a href="https://getcomposer.org/">Composer</a>):
 <ul>
-    <li><a href="https://github.com/FriendsOfSymfony/FOSRestBundle">FOSRestBundle</a></li>
-    <li><a href="https://github.com/schmittjoh/JMSSerializerBundle">JMSSerializerBundle</a></li>
-    <li>...</li>
+    <li><a href="https://github.com/FriendsOfSymfony/FOSRestBundle">friendsofsymfony/rest-bundle</a></li>
+    <li><a href="https://github.com/schmittjoh/JMSSerializerBundle">jms/serializer-bundle</a></li>
+    <li>willdurand/hateoas-bundle</li>
+    <li>pagerfanta/pagerfanta</li>
+    <li>nelmio/api-doc-bundle</li>
+    <li>lexik/jwt-authentication-bundle</li>
+    <li>fzaninotto/faker</li>
 </ul>
 
 # Installation
@@ -57,9 +62,6 @@ Dependencies (require <a href="https://getcomposer.org/">Composer</a>):
     </li>
     <li>c) Create database structure:
         <pre>
-            <code>php bin/console make:migration
-            php bin/console doctrine:migrations:migrate</code>
-            or
             <code>php bin/console doctrine:schema:update --force</code>
         </pre>
     </li>
@@ -70,13 +72,36 @@ Dependencies (require <a href="https://getcomposer.org/">Composer</a>):
     </li>
 </ul>
 
+<p><strong>4 - Create private and public keys with OpenSSL</strong></p>
+<pre>
+    <code>mkdir -p config/jwt
+    openssl genrsa -out config/jwt/private.pem -aes256 4096
+    openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+    </code>
+    When asking for passphrase, choose one and write it in .env file
+    <code>JWT_PASSPHRASE=yourpassphrase</code>
+</pre>
+
 # Usage
 
-More informations about usage will be available soon !
+To test the API, you have first to get an authentication token.
+Request with POST method on http://www.bilemo.charlottesaury.fr/api/login_check with following data in request JSON body :
+For client restricted access :
+{
+    "username": "user@bilemo.com",
+    "password": "user"
+}
+For admin full access :
+{
+    "username": "admin@bilemo.com",
+    "password": "admin"
+}
+In response you will obtain a token.
+You will then have to add that to following request headers under the key "Authorization" and value "Bearer %token%".
 
 # Documentation
 
-API documentation will be available soon !
+API documentation and testing interface is available <a href="">HERE</a>
 
 
 
