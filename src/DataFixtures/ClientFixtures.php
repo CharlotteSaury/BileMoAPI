@@ -34,6 +34,16 @@ class ClientFixtures extends Fixture
             $this->addReference('client'.$i, $client);
         }
 
+        $user = new Client();
+        $user->setEmail('user@bilemo.com')
+                ->setCreatedAt(new \DateTime())
+                ->setCompany('BileMo')
+                ->setPassword($this->encoder->encodePassword($user, 'user'))
+                ->setRoles(['ROLE_USER']);
+
+        $manager->persist($user);
+        $this->addReference('user', $user);
+
         $admin = new Client();
         $admin->setEmail('admin@bilemo.com')
                 ->setCreatedAt(new \DateTime())
