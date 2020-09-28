@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Product;
-use App\Repository\AbstractRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Hateoas\Representation\PaginatedRepresentation;
 
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,6 +19,14 @@ class ProductRepository extends AbstractRepository
         parent::__construct($registry, Product::class);
     }
 
+    /**
+     * Get paginated products list regarding research parameters
+     *
+     * @param integer $page
+     * @param integer $limit
+     * @param string $route
+     * @return PaginatedRepresentation
+     */
     public function search(int $page, int $limit, string $route)
     {
         $builder = $this

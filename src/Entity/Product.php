@@ -2,23 +2,23 @@
 
 namespace App\Entity;
 
-use DateTime;
-use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Since;
 use App\Repository\ProductRepository;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use Doctrine\Common\Collections\ArrayCollection;
-use Hateoas\Configuration\Annotation as Hateoas;
-use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\Since;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
  * @UniqueEntity(fields={"name"}, message="This product already exists.")
  * @ExclusionPolicy("all")
- * 
+ *
  * @Hateoas\Relation(
  *      "self",
  *      href = @Hateoas\Route(
@@ -62,7 +62,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Product
 {
-
     const ATTRIBUTES = ['name', 'description', 'screen', 'das', 'weight', 'length', 'width', 'height', 'wifi', 'video4k', 'bluetooth', 'camera', 'manufacturer'];
 
     /**
@@ -71,12 +70,14 @@ class Product
      * @ORM\Column(type="integer")
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @var Int
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * 
+     *
      * @Assert\NotBlank
      * @Assert\Length(
      *      min="2",
@@ -84,17 +85,19 @@ class Product
      *      minMessage="Product name must contain at least 2 characters",
      *      maxMessage="Product name should not contain more than 50 characters"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
-     * 
+     *
      * @Assert\NotBlank
      * @Assert\Length(
      *      min="6",
@@ -102,17 +105,19 @@ class Product
      *      minMessage="Product description must contain at least 6 characters",
      *      maxMessage="Product description should not contain more than 3000 characters"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * 
+     *
      * @Assert\NotBlank
      * @Assert\Length(
      *      min="2",
@@ -120,11 +125,13 @@ class Product
      *      minMessage="Manufacturer name must contain at least 2 characters",
      *      maxMessage="Manufacturer name should not contain more than 50 characters"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $manufacturer;
 
@@ -132,14 +139,16 @@ class Product
      * @ORM\Column(type="datetime")
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var DateTime
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="float")
-     * 
+     *
      * @Assert\NotBlank
      * @Assert\Positive
      * @Assert\Type(
@@ -150,17 +159,19 @@ class Product
      *     type="float",
      *     message="This value is not a valid float number"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var Float
      */
     private $screen;
 
     /**
      * @ORM\Column(type="float")
-     * 
+     *
      * @Assert\NotBlank
      * @Assert\Type(
      *      type="numeric",
@@ -170,17 +181,19 @@ class Product
      *     type="float",
      *     message="This value is not a valid float number"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var Float
      */
     private $das;
 
     /**
      * @ORM\Column(type="float")
-     * 
+     *
      * @Assert\NotBlank
      * @Assert\Positive
      * @Assert\Type(
@@ -191,17 +204,19 @@ class Product
      *     type="float",
      *     message="This value is not a valid float number"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var Float
      */
     private $weight;
 
     /**
      * @ORM\Column(type="float")
-     * 
+     *
      * @Assert\NotBlank
      * @Assert\Positive
      * @Assert\Type(
@@ -212,17 +227,19 @@ class Product
      *     type="float",
      *     message="This value is not a valid float number"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var Float
      */
     private $length;
 
     /**
      * @ORM\Column(type="float")
-     * 
+     *
      * @Assert\NotBlank
      * @Assert\Positive
      * @Assert\Type(
@@ -233,17 +250,19 @@ class Product
      *     type="float",
      *     message="This value is not a valid float number"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var Float
      */
     private $width;
 
     /**
      * @ORM\Column(type="float")
-     * 
+     *
      * @Assert\NotBlank
      * @Assert\Positive
      * @Assert\Type(
@@ -254,92 +273,104 @@ class Product
      *     type="float",
      *     message="This value is not a valid float number"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var Float
      */
     private $height;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * 
+     *
      * @Assert\NotNull
      * @Assert\Type(
      *      type="bool",
      *      message="This value should be a boolean"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var Bool
      */
     private $wifi;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * 
+     *
      * @Assert\NotNull
      * @Assert\Type(
      *      type="bool",
      *      message="This value should be a boolean"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var Bool
      */
     private $video4k;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * 
+     *
      * @Assert\NotNull
      * @Assert\Type(
      *      type="bool",
      *      message="This value should be a boolean"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var Bool
      */
     private $bluetooth;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * 
+     *
      * @Assert\NotNull
      * @Assert\Type(
      *      type="bool",
      *      message="This value should be a boolean"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var Bool
      */
     private $camera;
 
     /**
      * @ORM\OneToMany(targetEntity=Configuration::class, mappedBy="product", orphanRemoval=true, cascade={"persist"})
-     * 
+     *
      * @Assert\NotNull
      * @Assert\NotBlank
      * @Assert\Count(
      *      min = 1,
      *      minMessage = "You must specify at least one configuration")
      * @Assert\Valid
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var ArrayCollection
      */
     private $configurations;
 
@@ -390,12 +421,12 @@ class Product
         return $this;
     }
 
-    public function getScreen(): ?string
+    public function getScreen(): ?float
     {
         return $this->screen;
     }
 
-    public function setScreen(string $screen): self
+    public function setScreen(float $screen): self
     {
         $this->screen = $screen;
 

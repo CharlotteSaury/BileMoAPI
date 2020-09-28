@@ -13,9 +13,7 @@ class ProductTest extends KernelTestCase
     use FixturesTrait;
 
     /**
-     * Create a valid entity for tests
-     *
-     * @return Product
+     * Create a valid entity for tests.
      */
     public function getEntity(): Product
     {
@@ -31,8 +29,8 @@ class ProductTest extends KernelTestCase
             ->setCreatedAt(new \DateTime())
             ->setScreen(150.235)
             ->setDas(306.734)
-            ->setweight(205.243)
-            ->setlength(100.245)
+            ->setWeight(205.243)
+            ->setLength(100.245)
             ->setWidth(55.364)
             ->setHeight(100.423)
             ->setWifi(true)
@@ -45,7 +43,7 @@ class ProductTest extends KernelTestCase
     }
 
     /**
-     * Assert valid entity is valid
+     * Assert valid entity is valid.
      *
      * @return void
      */
@@ -55,7 +53,7 @@ class ProductTest extends KernelTestCase
     }
 
     /**
-     * Assert invalid entity (email, firstName, lastName) in invalid
+     * Assert invalid entity is invalid.
      *
      * @return void
      */
@@ -63,29 +61,29 @@ class ProductTest extends KernelTestCase
     {
         $invalidProduct = $this->getEntity();
         $invalidProduct->setName('')
-            ->setDescription('desc')
-            ->setManufacturer(4)
-            ->setScreen('zer')
-            ->setDas(10.25)
-            ->setweight('')
-            ->setlength('')
-            ->setWidth(true)
-            ->setHeight('ert')
-            ->setWifi('azert')
-            ->setVideo4k(12)
-            ->setBluetooth(1)
-            ->setCamera(1);
+            ->setDescription('pr')
+            ->setManufacturer(23.21)
+            ->setScreen('aed')
+            ->setDas('')
+            ->setWeight('ze')
+            ->setLength('')
+            ->setWidth('')
+            ->setHeight(true)
+            ->setWifi('')
+            ->setVideo4k(123)
+            ->setBluetooth('')
+            ->setCamera('');
         $this->assertHasErrors($invalidProduct, 15);
     }
 
     /**
-     * Assert product unicity with email
+     * Assert product unicity with name.
      *
      * @return void
      */
     public function testInvalidProductUniqueName()
     {
-        $invalidProduct = $this->getEntity()->setName('product1');
+        $invalidProduct = $this->getEntity()->setName('phone1');
         $this->assertHasErrors($invalidProduct, 1);
     }
 }

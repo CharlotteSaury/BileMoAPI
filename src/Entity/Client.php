@@ -2,26 +2,26 @@
 
 namespace App\Entity;
 
+use App\Repository\ClientRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\ClientRepository;
-use JMS\Serializer\Annotation\Since;
+use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use Doctrine\Common\Collections\ArrayCollection;
-use Hateoas\Configuration\Annotation as Hateoas;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use JMS\Serializer\Annotation\Since;
 use Swagger\Annotations as SWG;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ClientRepository::class)
  * @UniqueEntity(fields={"email"}, message="This client already exists")
  * @ExclusionPolicy("all")
- * 
+ *
  * @Hateoas\Relation(
  *      "self",
  *      href = @Hateoas\Route(
@@ -75,28 +75,32 @@ class Client implements UserInterface
      * @ORM\Column(type="integer")
      * @Expose
      * @Groups({"customer", "client", "clients_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var Int
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * 
+     *
      * @Assert\NotBlank
      * @Assert\Email
      * @Expose
      * @Groups({"client", "clients_list", "login"})
-     * 
+     *
      * @SWG\Property(description="Email address of client")
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * 
+     *
      * @Assert\NotBlank
      * @Assert\Length(
      *      min="6",
@@ -106,11 +110,12 @@ class Client implements UserInterface
      * )
      * @Expose
      * @Groups({"login"})
-     * 
+     *
      * @SWG\Property(description="Password of client")
-     * 
+     *
      * @Since("1.0")
      * 
+     * @var String
      */
     private $password;
 
@@ -118,26 +123,30 @@ class Client implements UserInterface
      * @ORM\Column(type="datetime")
      * @Expose
      * @Groups({"client", "clients_list"})
-     * 
+     *
      * @SWG\Property(description="Client's creation date")
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var DateTime
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="json")
      * @Groups({"client"})
-     * 
+     *
      * @SWG\Property(description="Client's role")
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var ArrayCollection
      */
-    private $roles = [];
+    private $roles;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * 
+     *
      * @Assert\NotBlank
      * @Assert\Length(
      *      min="2",
@@ -145,25 +154,29 @@ class Client implements UserInterface
      *      minMessage="Company name must contain at least 2 characters",
      *      maxMessage="Company name should not contain more than 50 characters"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"customer", "client", "clients_list"})
-     * 
+     *
      * @SWG\Property(description="Client's company name")
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $company;
 
     /**
      * @ORM\ManyToMany(targetEntity=Customer::class, inversedBy="clients")
-     * 
+     *
      * @Expose
      * @Groups({"client"})
-     * 
+     *
      * @SWG\Property(description="Client's related customers")
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var ArrayCollection
      */
     private $customers;
 
@@ -171,7 +184,6 @@ class Client implements UserInterface
     {
         $this->createdAt = new DateTime();
         $this->customers = new ArrayCollection();
-
     }
 
     public function getId(): ?int
@@ -224,6 +236,7 @@ class Client implements UserInterface
     {
         $roles = $this->roles;
         $roles[] = 'ROLE_USER';
+
         return array_unique($roles);
     }
 
@@ -289,6 +302,8 @@ class Client implements UserInterface
      *
      * This is important if, at any given point, sensitive information like
      * the plain-text password is stored on this object.
+     * 
+     * @return void
      */
     public function eraseCredentials()
     {

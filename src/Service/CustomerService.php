@@ -12,6 +12,7 @@ use App\Handler\ConstraintsViolationHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use App\Exception\ResourceValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -30,12 +31,12 @@ class CustomerService
     private $paginationHandler;
 
     /**
-     * @var ConstraintsViolationHandler 
+     * @var ConstraintsViolationHandler
      */
     private $constraintsViolationHandler;
 
     /**
-     * @var CustomerRepository 
+     * @var CustomerRepository
      */
     private $customerRepository;
 
@@ -59,6 +60,14 @@ class CustomerService
         $this->validator = $validator;
     }
 
+    /**
+     * Handle customer list pagination
+     *
+     * @param ParamFetcherInterface $paramFetcher
+     * @param Request $request
+     * @param Client $client
+     * @return Response
+     */
     public function handleList(ParamFetcherInterface $paramFetcher, Request $request, Client $client)
     {
         $paginatedRepresentation = $this->paginationHandler->paginate(
@@ -68,9 +77,17 @@ class CustomerService
             $request->get('_route'),
             $client
         );
+
         return $paginatedRepresentation;
     }
 
+    /**
+     * Handle customer deletion by related client or admin
+     *
+     * @param Request $request
+     * @param Client $client
+     * @return void
+     */
     public function handleDelete(Request $request, Client $client)
     {
         $customer = $this->customerRepository->findOneBy(['id' => $request->get('id')]);
@@ -78,7 +95,7 @@ class CustomerService
             if (!$this->security->isGranted('MANAGE', $customer)) {
                 throw new AccessDeniedHttpException();
             }
-            if ($customer->getClients()->contains($client)){
+            if ($customer->getClients()->contains($client)) {
                 $customer->removeClient($client);
             } else {
                 $this->entityManager->remove($customer);
@@ -87,6 +104,14 @@ class CustomerService
         }
     }
 
+    /**
+     * Handle customer deletion
+     *
+     * @param Customer $customer
+     * @param ConstraintViolationList $violations
+     * @param Client $client
+     * @return Customer $customer
+     */
     public function handleCreate(Customer $customer, ConstraintViolationList $violations, Client $client)
     {
         $existingCustomer = $this->customerRepository->findOneBy(['email' => $customer->getEmail()]);
@@ -96,6 +121,7 @@ class CustomerService
             $customer->setCreatedAt(new DateTime());
             $this->entityManager->persist($customer);
             $this->entityManager->flush();
+
             return $customer;
         }
         if ($existingCustomer->getClients()->contains($client)) {
@@ -103,21 +129,30 @@ class CustomerService
         }
         $existingCustomer->addClient($client);
         $this->entityManager->flush();
+
         return $existingCustomer;
     }
 
+    /**
+     * Handle customer update
+     *
+     * @param Customer $customer
+     * @param Request $request
+     * @return Customer $customer
+     */
     public function handleUpdate(Customer $customer, Request $request)
     {
         $data = json_decode($request->getContent());
         foreach ($data as $key => $value) {
             if (in_array($key, Customer::ATTRIBUTES)) {
-                $setter = 'set' . ucfirst($key);
+                $setter = 'set'.ucfirst($key);
                 $customer->$setter($value);
             }
         }
         $errors = $this->validator->validate($customer);
         $this->constraintsViolationHandler->validate($errors);
         $this->entityManager->flush();
+
         return $customer;
     }
 }

@@ -9,10 +9,9 @@ use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Handler\ConstraintsViolationHandler;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class ProductService
 {
@@ -27,7 +26,7 @@ class ProductService
     private $paginationHandler;
 
     /**
-     * @var ConstraintsViolationHandler 
+     * @var ConstraintsViolationHandler
      */
     private $constraintsViolationHandler;
 
@@ -36,32 +35,39 @@ class ProductService
      */
     private $productRepository;
 
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
-
-
-    public function __construct(PaginationHandler $paginationHandler, EntityManagerInterface $entityManager, ProductRepository $productRepository, ConstraintsViolationHandler $constraintsViolationHandler, ValidatorInterface $validator)
+    public function __construct(PaginationHandler $paginationHandler, EntityManagerInterface $entityManager, ProductRepository $productRepository, ConstraintsViolationHandler $constraintsViolationHandler)
     {
         $this->productRepository = $productRepository;
         $this->entityManager = $entityManager;
         $this->paginationHandler = $paginationHandler;
         $this->constraintsViolationHandler = $constraintsViolationHandler;
-        $this->validator = $validator;
     }
 
+    /**
+     * Handle product list pagination
+     *
+     * @param ParamFetcherInterface $paramFetcher
+     * @param Request $request
+     * @return Response
+     */
     public function handleList(ParamFetcherInterface $paramFetcher, Request $request)
     {
         $paginatedRepresentation = $this->paginationHandler->paginate(
-            'product', 
-            $paramFetcher->get('page'), 
-            $paramFetcher->get('limit'), 
+            'product',
+            $paramFetcher->get('page'),
+            $paramFetcher->get('limit'),
             $request->get('_route')
         );
+
         return $paginatedRepresentation;
     }
 
+    /**
+     * Handle product deletion
+     *
+     * @param Request $request
+     * @return void
+     */
     public function handleDelete(Request $request)
     {
         $product = $this->productRepository->findOneBy(['id' => $request->get('id')]);
@@ -71,12 +77,19 @@ class ProductService
         }
     }
 
+    /**
+     * Handle product creation 
+     *
+     * @param Product $product
+     * @param ConstraintViolationList $violations
+     * @return Product $product
+     */
     public function handleCreate(Product $product, ConstraintViolationList $violations)
     {
         $this->constraintsViolationHandler->validate($violations);
 
         $product->setCreatedAt(new DateTime());
-        if ($product->getConfigurations() != null) {
+        if (null != $product->getConfigurations()) {
             foreach ($product->getConfigurations() as $config) {
                 $config->setProduct($product);
                 foreach ($config->getImages() as $image) {

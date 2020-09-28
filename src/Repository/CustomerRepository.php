@@ -4,8 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Client;
 use App\Entity\Customer;
-use App\Repository\AbstractRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Hateoas\Representation\PaginatedRepresentation;
 
 /**
  * @method Customer|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,6 +20,15 @@ class CustomerRepository extends AbstractRepository
         parent::__construct($registry, Customer::class);
     }
 
+    /**
+     * Get paginated customers list regarding research parameters
+     *
+     * @param integer $page
+     * @param integer $limit
+     * @param string $route
+     * @param Client $client
+     * @return PaginatedRepresentation
+     */
     public function search(int $page, int $limit, string $route, Client $client)
     {
         $builder = $this

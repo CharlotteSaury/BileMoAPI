@@ -4,18 +4,18 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Service\ClientService;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Request\ParamFetcherInterface;
-use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
-use Symfony\Component\Validator\ConstraintViolationList;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Request\ParamFetcherInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class ClientController extends AbstractFOSRestController
 {
@@ -30,8 +30,8 @@ class ClientController extends AbstractFOSRestController
     }
 
     /**
-     * List characteristic of the specified BileMo's client
-     * 
+     * List characteristic of the specified BileMo's client.
+     *
      * @Rest\Get(
      *      path = "/api/clients/{id}",
      *      name = "app_clients_show",
@@ -40,11 +40,11 @@ class ClientController extends AbstractFOSRestController
      * @Rest\View(
      *      serializerGroups={"client"}
      * )
-     * 
+     *
      * @Cache(maxage="3600", public=false, mustRevalidate=true)
-     * 
+     *
      * @IsGranted("MANAGE", subject="client")
-     * 
+     *
      * @SWG\Get(
      *     description="List the characteristics of the specified client (Restricted to admin)",
      *     tags = {"Client"},
@@ -80,6 +80,8 @@ class ClientController extends AbstractFOSRestController
      *          description="Bearer JWT Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function showAction(Client $client)
     {
@@ -87,18 +89,18 @@ class ClientController extends AbstractFOSRestController
     }
 
     /**
-     * List all BileMo's clients
-     * 
+     * List all BileMo's clients.
+     *
      * @Rest\Get(
      *      path = "/api/clients",
      *      name = "app_clients_list"
      * )
      * @Rest\View()
-     * 
+     *
      * @IsGranted("ROLE_ADMIN")
-     * 
+     *
      * @Cache(maxage="3600", public=false, mustRevalidate=true)
-     * 
+     *
      * @Rest\QueryParam(
      *     name="page",
      *     requirements="^[1-9]+[0-9]*$",
@@ -111,7 +113,7 @@ class ClientController extends AbstractFOSRestController
      *     default="10",
      *     description="Maximum number of clients per page."
      * )
-     * 
+     *
      * @SWG\Get(
      *     description="List all BileMo's clients (Restricted to admin)",
      *     tags = {"Client"},
@@ -154,6 +156,8 @@ class ClientController extends AbstractFOSRestController
      *          description="Bearer Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function listAction(ParamFetcherInterface $paramFetcher, Request $request)
     {
@@ -161,8 +165,8 @@ class ClientController extends AbstractFOSRestController
     }
 
     /**
-     * Create a new BileMo's client
-     * 
+     * Create a new BileMo's client.
+     *
      * @Rest\Post(
      *      path = "/api/clients",
      *      name = "app_clients_create"
@@ -172,9 +176,9 @@ class ClientController extends AbstractFOSRestController
      *      serializerGroups={"client"}
      * )
      * @ParamConverter("client", converter="fos_rest.request_body")
-     * 
+     *
      * @IsGranted("ROLE_ADMIN")
-     * 
+     *
      * @SWG\Post(
      *     description="Create a new client (Restricted to admin)",
      *     tags = {"Client"},
@@ -218,11 +222,13 @@ class ClientController extends AbstractFOSRestController
      *          description="Bearer JWT Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function createAction(Client $client, ConstraintViolationList $violations)
     {
         $newClient = $this->clientService->handleCreate($client, $violations);
-        
+
         return $this->view(
             $newClient,
             Response::HTTP_CREATED,
@@ -231,8 +237,8 @@ class ClientController extends AbstractFOSRestController
     }
 
     /**
-     * Delete a BileMo's client
-     * 
+     * Delete a BileMo's client.
+     *
      * @Rest\Delete(
      *      path = "/api/clients/{id}",
      *      name = "app_clients_delete",
@@ -242,7 +248,7 @@ class ClientController extends AbstractFOSRestController
      *      StatusCode = Response::HTTP_NO_CONTENT
      * )
      * @IsGranted("ROLE_ADMIN")
-     * 
+     *
      * @SWG\Delete(
      *     description="Delete the specified client (Restricted to admin)",
      *     tags = {"Client"},
@@ -280,6 +286,8 @@ class ClientController extends AbstractFOSRestController
      *          description="Bearer JWT Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function deleteAction(Request $request)
     {
@@ -287,8 +295,8 @@ class ClientController extends AbstractFOSRestController
     }
 
     /**
-     * Update a BileMo's client
-     * 
+     * Update a BileMo's client.
+     *
      * @Rest\Put(
      *      path = "/api/clients/{id}",
      *      name = "app_clients_update",
@@ -298,9 +306,9 @@ class ClientController extends AbstractFOSRestController
      *      serializerGroups={"client"},
      *      StatusCode = 200
      * )
-     * 
+     *
      * @IsGranted("ROLE_ADMIN")
-     * 
+     *
      * @SWG\Put(
      *     description="Update a BileMo's client - email and company name (Restricted to admin)",
      *     tags = {"Client"},
@@ -344,16 +352,19 @@ class ClientController extends AbstractFOSRestController
      *          description="Bearer JWT Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function updateAction(Client $client, Request $request)
     {
         $updatedClient = $this->clientService->handleUpdate($client, $request);
+
         return $updatedClient;
     }
 
     /**
-     * Allow client to update their password
-     * 
+     * Allow client to update their password.
+     *
      * @Rest\Put(
      *      path = "/api/clients/{id}/password",
      *      name = "app_clients_password",
@@ -364,7 +375,7 @@ class ClientController extends AbstractFOSRestController
      *      StatusCode = 200
      * )
      * @IsGranted("MANAGE", subject="client")
-     * 
+     *
      * @SWG\Put(
      *     description="Update client's own password",
      *     tags = {"Client"},
@@ -408,10 +419,13 @@ class ClientController extends AbstractFOSRestController
      *          description="Bearer JWT Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function updatePassAction(Client $client, Request $request)
     {
         $updatedClient = $this->clientService->handlePasswordUpdate($client, $request);
+
         return $updatedClient;
     }
 }

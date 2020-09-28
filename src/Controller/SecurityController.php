@@ -2,21 +2,20 @@
 
 namespace App\Controller;
 
-use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
-use Nelmio\ApiDocBundle\Annotation\Model;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Swagger\Annotations as SWG;
 
 class SecurityController extends AbstractFOSRestController
 {
     /**
-     * Get a JWT token to authenticate queries
-     * 
+     * Get a JWT token to authenticate queries.
+     *
      * @Rest\Post(
      *      path = "/api/login_check",
      *      name = "api_login_check"
      * )
-     * 
+     *
      * @SWG\Post(
      *     description="Authentication : Get a JWT token to authenticate queries",
      *     tags = {"Authentication"},
@@ -50,6 +49,5 @@ class SecurityController extends AbstractFOSRestController
      */
     public function login()
     {
-        
     }
 }

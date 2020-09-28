@@ -2,23 +2,23 @@
 
 namespace App\Entity;
 
+use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Since;
+use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
-use App\Repository\CustomerRepository;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use Hateoas\Configuration\Annotation as Hateoas;
-use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\Since;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
  * @UniqueEntity(fields={"email"}, message="This customer already exists")
  * @ExclusionPolicy("all")
- * 
+ *
  * @Hateoas\Relation(
  *      "self",
  *      href = @Hateoas\Route(
@@ -72,51 +72,59 @@ class Customer
      * @ORM\Column(type="integer")
      * @Expose
      * @Groups({"customer", "customers_list", "client"})
+     * 
+     * @var Int
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * 
+     *
      * @Assert\NotBlank
      * @Assert\Email
-     * 
+     *
      * @Expose
      * @Groups({"customer", "customers_list", "client"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * 
+     *
      * @Assert\NotBlank
      * @Assert\Length(
      *      min="2",
      *      max="30"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"customer", "customers_list", "client"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * 
+     *
      * @Assert\NotBlank
      * @Assert\Length(
      *      min="2",
      *      max="30"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"customer", "customers_list", "client"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $lastname;
 
@@ -124,16 +132,20 @@ class Customer
      * @ORM\Column(type="datetime")
      * @Expose
      * @Groups({"customer", "customers_list", "client"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var DateTimeInterface
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToMany(targetEntity=Client::class, mappedBy="customers")
      * @Groups({"customer", "customers_list", "client"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var ArrayCollection
      */
     private $clients;
 
@@ -205,7 +217,7 @@ class Customer
 
     public function addClient(Client $client): self
     {
-        if($this->clients == null){
+        if (null == $this->clients) {
             $this->clients = new ArrayCollection();
         }
         if (!$this->clients->contains($client)) {

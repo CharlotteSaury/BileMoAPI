@@ -2,8 +2,8 @@
 
 namespace App\Tests\Handler;
 
-use PHPUnit\Framework\TestCase;
 use App\Handler\PaginationHandler;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 class PaginationHandlerTest extends TestCase
@@ -24,7 +24,7 @@ class PaginationHandlerTest extends TestCase
             ->getMock();
 
         $paginationHandler = new PaginationHandler($serializer, $productRepository, $clientRepository, $customerRepository);
-        
+
         $response = $paginationHandler->paginate('product', 1, 15, 'app_products_list');
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $headers = $response->headers->all();

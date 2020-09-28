@@ -3,10 +3,10 @@
 namespace App\Security\Voter;
 
 use App\Entity\Client;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class ClientVoter extends Voter
 {
@@ -19,14 +19,14 @@ class ClientVoter extends Voter
     {
         $this->security = $security;
     }
-    
+
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ['MANAGE'])
             && $subject instanceof \App\Entity\Client;
     }
 
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token)
     {
         $currentUser = $token->getUser();
         // if the user is anonymous, do not grant access
@@ -41,19 +41,20 @@ class ClientVoter extends Voter
         /** @var Client $client */
         $client = $subject;
 
-        switch ($attribute) {
-            case 'MANAGE':
-                return $this->canManage($client, $currentUser);
-                break;
+        if ($attribute == 'MANAGE') {
+            return $this->canManage($client, $currentUser);
         }
 
         return false;
     }
 
-    public function canManage(Client $client, Client $currentUser)
+    /**
+     * @param Client $client
+     * @param UserInterface $currentUser
+     * @return boolean
+     */
+    public function canManage(Client $client, UserInterface $currentUser)
     {
         return $client === $currentUser;
     }
 }
-
-

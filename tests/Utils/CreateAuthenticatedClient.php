@@ -7,9 +7,9 @@ use Liip\TestFixturesBundle\Test\FixturesTrait;
 trait createAuthenticatedClient
 {
     use FixturesTrait;
-    
+
     /**
-     * Create an authenticated client
+     * Create an authenticated client.
      **/
     public function createAuthenticatedClient($username = 'client1@email.com', $password = 'password')
     {
@@ -22,15 +22,15 @@ trait createAuthenticatedClient
         $client->request(
             'POST',
             '/api/login_check',
-            array(),
-            array(),
-            array('CONTENT_TYPE' => 'application/json'),
-            json_encode(array(
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
                 'username' => $username,
-                'password' => $password
-            ))
+                'password' => $password,
+            ])
         );
-        
+
         $data = json_decode($client->getResponse()->getContent(), true);
 
         self::ensureKernelShutdown();

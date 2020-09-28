@@ -4,18 +4,18 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Service\ProductService;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Request\ParamFetcherInterface;
-use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
-use Symfony\Component\Validator\ConstraintViolationList;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Request\ParamFetcherInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class ProductController extends AbstractFOSRestController
 {
@@ -30,8 +30,8 @@ class ProductController extends AbstractFOSRestController
     }
 
     /**
-     * List the characteristics of the specified product
-     * 
+     * List the characteristics of the specified product.
+     *
      * @Rest\Get(
      *      path = "/api/products/{id}",
      *      name = "app_products_show",
@@ -40,9 +40,9 @@ class ProductController extends AbstractFOSRestController
      * @Rest\View(
      *      serializerGroups={"product"}
      * )
-     * 
+     *
      * @Cache(maxage="3600", public=true, mustRevalidate=true)
-     * 
+     *
      * @SWG\Get(
      *     description="List the characteristics of the specified product",
      *     tags = {"Product"},
@@ -78,6 +78,8 @@ class ProductController extends AbstractFOSRestController
      *          description="Bearer JWT Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function showAction(Product $product)
     {
@@ -85,8 +87,8 @@ class ProductController extends AbstractFOSRestController
     }
 
     /**
-     * List all the available BileMo products (smartphones)
-     * 
+     * List all the available BileMo products (smartphones).
+     *
      * @Rest\Get(
      *      path = "/api/products",
      *      name = "app_products_list"
@@ -94,9 +96,9 @@ class ProductController extends AbstractFOSRestController
      * @Rest\View(
      *      serializerGroups={"products_list"}
      * )
-     * 
+     *
      * @Cache(maxage="3600", public=true, mustRevalidate=true)
-     * 
+     *
      * @Rest\QueryParam(
      *     name="page",
      *     requirements="^[1-9]+[0-9]*$",
@@ -109,7 +111,7 @@ class ProductController extends AbstractFOSRestController
      *     default="10",
      *     description="Maximum number of products per page."
      * )
-     * 
+     *
      * @SWG\Get(
      *     description="List all the available BileMo products (smartphones)",
      *     tags = {"Product"},
@@ -152,6 +154,8 @@ class ProductController extends AbstractFOSRestController
      *          description="Bearer Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function listAction(ParamFetcherInterface $paramFetcher, Request $request)
     {
@@ -159,8 +163,8 @@ class ProductController extends AbstractFOSRestController
     }
 
     /**
-     * Delete the specified product
-     * 
+     * Delete the specified product.
+     *
      * @Rest\Delete(
      *      path = "/api/products/{id}",
      *      name = "app_products_delete",
@@ -170,7 +174,7 @@ class ProductController extends AbstractFOSRestController
      *      StatusCode = Response::HTTP_NO_CONTENT
      * )
      * @IsGranted("ROLE_ADMIN")
-     * 
+     *
      * @SWG\Delete(
      *     description="Delete the specified product",
      *     tags = {"Product"},
@@ -208,6 +212,8 @@ class ProductController extends AbstractFOSRestController
      *          description="Bearer JWT Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function deleteAction(Request $request)
     {
@@ -215,8 +221,8 @@ class ProductController extends AbstractFOSRestController
     }
 
     /**
-     * Create a new product
-     * 
+     * Create a new product.
+     *
      * @Rest\Post(
      *      path = "/api/products",
      *      name = "app_products_create"
@@ -226,11 +232,11 @@ class ProductController extends AbstractFOSRestController
      *      serializerGroups={"product"}
      * )
      * @ParamConverter(
-     *      "product", 
+     *      "product",
      *      converter="fos_rest.request_body"
      * )
      * @IsGranted("ROLE_ADMIN")
-     * 
+     *
      * @SWG\Post(
      *     description="Create a new product",
      *     tags = {"Product"},
@@ -305,6 +311,8 @@ class ProductController extends AbstractFOSRestController
      *          description="Bearer JWT Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function createAction(Product $product, ConstraintViolationList $violations)
     {

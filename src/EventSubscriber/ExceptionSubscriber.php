@@ -3,15 +3,14 @@
 namespace App\EventSubscriber;
 
 use App\Exception\ResourceValidationException;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
-use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
@@ -22,7 +21,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
             $message = 'Object not found: Invalid route or resource ID';
             $status = $exception->getStatusCode();
         } elseif ($exception instanceof MethodNotAllowedHttpException) {
-            $message = "This method is not allowed for this route";
+            $message = 'This method is not allowed for this route';
             $status = $exception->getStatusCode();
         } elseif ($exception instanceof ResourceValidationException || $exception instanceof BadRequestHttpException || $exception instanceof OutOfRangeCurrentPageException) {
             $message = $exception->getMessage();
@@ -32,11 +31,11 @@ class ExceptionSubscriber implements EventSubscriberInterface
             $status = 403;
         } else {
             return;
-        } 
+        }
 
         $data = [
             'code' => $status,
-            'message' => $message
+            'message' => $message,
         ];
 
         $response = new JsonResponse($data, $status);

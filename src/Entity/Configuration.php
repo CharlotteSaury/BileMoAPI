@@ -2,16 +2,15 @@
 
 namespace App\Entity;
 
+use App\Repository\ConfigurationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Since;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
-use App\Repository\ConfigurationRepository;
-use Doctrine\Common\Collections\Collection;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\Since;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ConfigurationRepository::class)
@@ -23,12 +22,14 @@ class Configuration
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
+     * @var Int
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer", length=255)
-     * 
+     *
      * @Assert\NotNull
      * @Assert\NotBlank
      * @Assert\Positive
@@ -36,17 +37,19 @@ class Configuration
      *      type="integer",
      *      message="This value should be an integer value"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var Int
      */
     private $memory;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * 
+     *
      * @Assert\NotNull
      * @Assert\NotBlank
      * @Assert\Length(
@@ -55,17 +58,19 @@ class Configuration
      *      minMessage="Manufacturer name must contain at least 2 characters",
      *      maxMessage="Manufacturer name should not contain more than 50 characters"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $color;
 
     /**
      * @ORM\Column(type="float")
-     * 
+     *
      * @Assert\NotNull
      * @Assert\NotBlank
      * @Assert\Positive
@@ -77,11 +82,13 @@ class Configuration
      *     type="float",
      *     message="This value is not a valid float number"
      * )
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var Float
      */
     private $price;
 
@@ -90,8 +97,10 @@ class Configuration
      * @ORM\JoinColumn(nullable=false)
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var Product
      */
     private $product;
 
@@ -101,8 +110,10 @@ class Configuration
      * @Assert\Valid
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
+     * 
+     * @var ArrayCollection
      */
     private $images;
 
@@ -116,12 +127,12 @@ class Configuration
         return $this->id;
     }
 
-    public function getMemory(): ?string
+    public function getMemory(): ?int
     {
         return $this->memory;
     }
 
-    public function setMemory(string $memory): self
+    public function setMemory(int $memory): self
     {
         $this->memory = $memory;
 
