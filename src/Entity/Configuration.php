@@ -2,14 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\ConfigurationRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\ExclusionPolicy;
+use Swagger\Annotations as SWG;
+use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\Since;
+use App\Repository\ConfigurationRepository;
+use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -40,6 +41,8 @@ class Configuration
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Memory capacity of phone in GB")
      *
      * @Since("1.0")
      * 
@@ -61,6 +64,8 @@ class Configuration
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Phone color")
      *
      * @Since("1.0")
      * 
@@ -85,6 +90,8 @@ class Configuration
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Phone price in €")
      *
      * @Since("1.0")
      * 
@@ -97,6 +104,8 @@ class Configuration
      * @ORM\JoinColumn(nullable=false)
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Related product")
      *
      * @Since("1.0")
      * 
@@ -110,6 +119,8 @@ class Configuration
      * @Assert\Valid
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Illustrations of phone configuration")
      *
      * @Since("1.0")
      * 

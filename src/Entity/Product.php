@@ -2,17 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\ProductRepository;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Hateoas\Configuration\Annotation as Hateoas;
-use JMS\Serializer\Annotation\ExclusionPolicy;
+use Swagger\Annotations as SWG;
+use JMS\Serializer\Annotation\Since;
+use App\Repository\ProductRepository;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\Since;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use Doctrine\Common\Collections\ArrayCollection;
+use Hateoas\Configuration\Annotation as Hateoas;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -88,6 +89,8 @@ class Product
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Phone name")
      *
      * @Since("1.0")
      * 
@@ -108,6 +111,8 @@ class Product
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Phone description")
      *
      * @Since("1.0")
      * 
@@ -128,6 +133,8 @@ class Product
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Phone manufacturer")
      *
      * @Since("1.0")
      * 
@@ -139,6 +146,8 @@ class Product
      * @ORM\Column(type="datetime")
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Phone creation date in Bilemo catalog")
      *
      * @Since("1.0")
      * 
@@ -162,6 +171,8 @@ class Product
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="phone screen size in pouce")
      *
      * @Since("1.0")
      * 
@@ -184,6 +195,8 @@ class Product
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Phone DAS value")
      *
      * @Since("1.0")
      * 
@@ -207,6 +220,8 @@ class Product
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Phone weight in gram")
      *
      * @Since("1.0")
      * 
@@ -230,6 +245,8 @@ class Product
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Phone length in millimeter")
      *
      * @Since("1.0")
      * 
@@ -253,6 +270,8 @@ class Product
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Phone width in millimeter")
      *
      * @Since("1.0")
      * 
@@ -276,6 +295,8 @@ class Product
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Phone height in millimeter")
      *
      * @Since("1.0")
      * 
@@ -294,6 +315,8 @@ class Product
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Wifi feature (true/false)")
      *
      * @Since("1.0")
      * 
@@ -312,6 +335,8 @@ class Product
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Video4k feature (true/false)")
      *
      * @Since("1.0")
      * 
@@ -330,6 +355,8 @@ class Product
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Bluetooth feature (true/false)")
      *
      * @Since("1.0")
      * 
@@ -348,6 +375,8 @@ class Product
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Camera feature (true/false)")
      *
      * @Since("1.0")
      * 
@@ -367,6 +396,8 @@ class Product
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Related configurations")
      *
      * @Since("1.0")
      * 

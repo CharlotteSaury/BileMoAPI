@@ -2,17 +2,19 @@
 
 namespace App\Entity;
 
-use App\Repository\CustomerRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Hateoas\Configuration\Annotation as Hateoas;
-use JMS\Serializer\Annotation\ExclusionPolicy;
+use Swagger\Annotations as SWG;
+use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\Since;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Repository\CustomerRepository;
+use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use Doctrine\Common\Collections\ArrayCollection;
+use Hateoas\Configuration\Annotation as Hateoas;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
@@ -85,6 +87,8 @@ class Customer
      *
      * @Expose
      * @Groups({"customer", "customers_list", "client"})
+     * 
+     * @SWG\Property(description="Customer email")
      *
      * @Since("1.0")
      * 
@@ -103,6 +107,8 @@ class Customer
      *
      * @Expose
      * @Groups({"customer", "customers_list", "client"})
+     * 
+     * @SWG\Property(description="Customer first name")
      *
      * @Since("1.0")
      * 
@@ -121,6 +127,8 @@ class Customer
      *
      * @Expose
      * @Groups({"customer", "customers_list", "client"})
+     * 
+     * @SWG\Property(description="Customer last name")
      *
      * @Since("1.0")
      * 
@@ -132,6 +140,8 @@ class Customer
      * @ORM\Column(type="datetime")
      * @Expose
      * @Groups({"customer", "customers_list", "client"})
+     * 
+     * @SWG\Property(description="Creation date")
      *
      * @Since("1.0")
      * 
@@ -142,6 +152,8 @@ class Customer
     /**
      * @ORM\ManyToMany(targetEntity=Client::class, mappedBy="customers")
      * @Groups({"customer", "customers_list", "client"})
+     * 
+     * @SWG\Property(description="Related clients")
      *
      * @Since("1.0")
      * 

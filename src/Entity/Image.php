@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\ExclusionPolicy;
+use Swagger\Annotations as SWG;
+use App\Repository\ImageRepository;
+use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\Since;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -32,6 +33,8 @@ class Image
      *
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @SWG\Property(description="Phone picture url")
      *
      * @Since("1.0")
      * 
@@ -42,6 +45,8 @@ class Image
     /**
      * @ORM\ManyToOne(targetEntity=Configuration::class, inversedBy="images")
      * @ORM\JoinColumn(nullable=false)
+     * 
+     * @SWG\Property(description="Related configuration")
      *
      * @Since("1.0")
      * 
