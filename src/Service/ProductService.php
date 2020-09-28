@@ -36,19 +36,13 @@ class ProductService
      */
     private $productRepository;
 
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
 
-
-    public function __construct(PaginationHandler $paginationHandler, EntityManagerInterface $entityManager, ProductRepository $productRepository, ConstraintsViolationHandler $constraintsViolationHandler, ValidatorInterface $validator)
+    public function __construct(PaginationHandler $paginationHandler, EntityManagerInterface $entityManager, ProductRepository $productRepository, ConstraintsViolationHandler $constraintsViolationHandler)
     {
         $this->productRepository = $productRepository;
         $this->entityManager = $entityManager;
         $this->paginationHandler = $paginationHandler;
         $this->constraintsViolationHandler = $constraintsViolationHandler;
-        $this->validator = $validator;
     }
 
     public function handleList(ParamFetcherInterface $paramFetcher, Request $request)
