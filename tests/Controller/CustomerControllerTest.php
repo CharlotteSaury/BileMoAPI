@@ -3,15 +3,15 @@
 namespace App\Tests\Controller;
 
 use App\Tests\Utils\CreateAuthenticatedClient;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class CustomerControllerTest extends WebTestCase
 {
     use CreateAuthenticatedClient;
 
     /**
-     * Test Error 405 when method not allowed
+     * Test Error 405 when method not allowed.
      *
      * @return void
      */
@@ -19,17 +19,17 @@ class CustomerControllerTest extends WebTestCase
     {
         $routes = [
             'DELETE' => '/api/customers',
-            'PUT' => '/api/customers'
+            'PUT' => '/api/customers',
         ];
         $client = $this->createAuthenticatedClient();
         foreach ($routes as $method => $url) {
-             $client->request($method, $url);
-             $this->assertEquals(Response::HTTP_METHOD_NOT_ALLOWED, $client->getResponse()->getStatusCode());
-        } 
+            $client->request($method, $url);
+            $this->assertEquals(Response::HTTP_METHOD_NOT_ALLOWED, $client->getResponse()->getStatusCode());
+        }
     }
 
     /**
-     * Test customers list request by authenticated client and presence of pagination information
+     * Test customers list request by authenticated client and presence of pagination information.
      *
      * @return void
      */
@@ -49,7 +49,7 @@ class CustomerControllerTest extends WebTestCase
     }
 
     /**
-     * Test related customer details request by authenticated client
+     * Test related customer details request by authenticated client.
      *
      * @return void
      */
@@ -69,7 +69,7 @@ class CustomerControllerTest extends WebTestCase
     }
 
     /**
-     * Test denied access for not related customer details request by authenticated client
+     * Test denied access for not related customer details request by authenticated client.
      *
      * @return void
      */
@@ -84,7 +84,7 @@ class CustomerControllerTest extends WebTestCase
     }
 
     /**
-     * Test error 404 return when requesting non existing resource
+     * Test error 404 return when requesting non existing resource.
      *
      * @return void
      */
@@ -98,30 +98,28 @@ class CustomerControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_NOT_FOUND, $client->getResponse()->getStatusCode());
     }
 
-    
-
     /**
-     * Handle post request for new customer
+     * Handle post request for new customer.
      *
-     * @param Array $data
-     * @return Object
+     * @return object
      */
-    public function postCustomer(Array $data) {
+    public function postCustomer(array $data)
+    {
         $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/customers',
-            array(),
-            array(),
-            array('CONTENT_TYPE' => 'application/json'),
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
             json_encode($data)
         );
-        
+
         return $client;
     }
 
     /**
-     * Test new customer creation request with valid data
+     * Test new customer creation request with valid data.
      *
      * @return void
      */
@@ -130,7 +128,7 @@ class CustomerControllerTest extends WebTestCase
         $data = [
             'email' => 'email@email.com',
             'firstname' => 'firstname',
-            'lastname' => 'lastname'
+            'lastname' => 'lastname',
         ];
         $client = $this->postCustomer($data);
         $this->assertSame(Response::HTTP_CREATED, $client->getResponse()->getStatusCode());
@@ -142,7 +140,7 @@ class CustomerControllerTest extends WebTestCase
     }
 
     /**
-     * Test new customer request with invalid data
+     * Test new customer request with invalid data.
      *
      * @return void
      */
@@ -150,28 +148,28 @@ class CustomerControllerTest extends WebTestCase
     {
         $data = [
             'email' => 'wrongemail',
-            'firstname' => 'c'
+            'firstname' => 'c',
         ];
         $client = $this->postCustomer($data);
         $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
     }
 
     /**
-     * Test new customer request with already associated customer
+     * Test new customer request with already associated customer.
      *
      * @return void
      */
     public function testAlreadyAssociatedPostCustomer()
     {
         $data = [
-            'email' => 'customer1@email.com'
+            'email' => 'customer1@email.com',
         ];
         $client = $this->postCustomer($data);
         $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
     }
 
     /**
-     * Test already existing customer creation by another client request with valid data
+     * Test already existing customer creation by another client request with valid data.
      *
      * @return void
      */
@@ -180,7 +178,7 @@ class CustomerControllerTest extends WebTestCase
         $data = [
             'email' => 'customer2@email.com',
             'firstname' => 'cust2',
-            'lastname' => 'omer2'
+            'lastname' => 'omer2',
         ];
         $client = $this->postCustomer($data);
         $this->assertSame(Response::HTTP_CREATED, $client->getResponse()->getStatusCode());
@@ -192,7 +190,7 @@ class CustomerControllerTest extends WebTestCase
     }
 
     /**
-     * Test related customer deletion by authenticated client
+     * Test related customer deletion by authenticated client.
      *
      * @return void
      */
@@ -207,7 +205,7 @@ class CustomerControllerTest extends WebTestCase
     }
 
     /**
-     * Test unrelated customer deletion by authenticated client
+     * Test unrelated customer deletion by authenticated client.
      *
      * @return void
      */
@@ -221,9 +219,8 @@ class CustomerControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_FORBIDDEN, $client->getResponse()->getStatusCode());
     }
 
-
     /**
-     * Test unknown customer deletion by authenticated client
+     * Test unknown customer deletion by authenticated client.
      *
      * @return void
      */
@@ -238,10 +235,11 @@ class CustomerControllerTest extends WebTestCase
     }
 
     /**
-     * Handle related customer update request by authenticated client
+     * Handle related customer update request by authenticated client.
      *
-     * @param Array $data
-     * @return Object
+     * @param array $data
+     *
+     * @return object
      */
     public function updateCustomer(int $customerId, string $email)
     {
@@ -249,18 +247,19 @@ class CustomerControllerTest extends WebTestCase
         $client->request(
             'PUT',
             '/api/customers/'.$customerId,
-            array(),
-            array(),
-            array('CONTENT_TYPE' => 'application/json'),
-            json_encode(array(
-                'email' => $email
-            ))
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                'email' => $email,
+            ])
         );
+
         return $client;
     }
-    
+
     /**
-     * Test related customer update request with valid data
+     * Test related customer update request with valid data.
      *
      * @return void
      */
@@ -277,7 +276,7 @@ class CustomerControllerTest extends WebTestCase
     }
 
     /**
-     * Test related customer update request with invalid data
+     * Test related customer update request with invalid data.
      *
      * @return void
      */
@@ -288,7 +287,7 @@ class CustomerControllerTest extends WebTestCase
     }
 
     /**
-     * Test unrelated customer update request with valid data
+     * Test unrelated customer update request with valid data.
      *
      * @return void
      */
@@ -297,6 +296,4 @@ class CustomerControllerTest extends WebTestCase
         $client = $this->updateCustomer(2, 'newcustomer2@email.com');
         $this->assertSame(Response::HTTP_FORBIDDEN, $client->getResponse()->getStatusCode());
     }
-
-    
 }

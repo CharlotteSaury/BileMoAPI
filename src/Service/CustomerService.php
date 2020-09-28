@@ -2,20 +2,20 @@
 
 namespace App\Service;
 
-use DateTime;
 use App\Entity\Client;
 use App\Entity\Customer;
+use App\Exception\ResourceValidationException;
+use App\Handler\ConstraintsViolationHandler;
 use App\Handler\PaginationHandler;
 use App\Repository\CustomerRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Handler\ConstraintsViolationHandler;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
-use App\Exception\ResourceValidationException;
 use FOS\RestBundle\Request\ParamFetcherInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class CustomerService
 {
@@ -30,12 +30,12 @@ class CustomerService
     private $paginationHandler;
 
     /**
-     * @var ConstraintsViolationHandler 
+     * @var ConstraintsViolationHandler
      */
     private $constraintsViolationHandler;
 
     /**
-     * @var CustomerRepository 
+     * @var CustomerRepository
      */
     private $customerRepository;
 
@@ -68,6 +68,7 @@ class CustomerService
             $request->get('_route'),
             $client
         );
+
         return $paginatedRepresentation;
     }
 
@@ -78,7 +79,7 @@ class CustomerService
             if (!$this->security->isGranted('MANAGE', $customer)) {
                 throw new AccessDeniedHttpException();
             }
-            if ($customer->getClients()->contains($client)){
+            if ($customer->getClients()->contains($client)) {
                 $customer->removeClient($client);
             } else {
                 $this->entityManager->remove($customer);
@@ -96,6 +97,7 @@ class CustomerService
             $customer->setCreatedAt(new DateTime());
             $this->entityManager->persist($customer);
             $this->entityManager->flush();
+
             return $customer;
         }
         if ($existingCustomer->getClients()->contains($client)) {
@@ -103,6 +105,7 @@ class CustomerService
         }
         $existingCustomer->addClient($client);
         $this->entityManager->flush();
+
         return $existingCustomer;
     }
 
@@ -111,13 +114,14 @@ class CustomerService
         $data = json_decode($request->getContent());
         foreach ($data as $key => $value) {
             if (in_array($key, Customer::ATTRIBUTES)) {
-                $setter = 'set' . ucfirst($key);
+                $setter = 'set'.ucfirst($key);
                 $customer->$setter($value);
             }
         }
         $errors = $this->validator->validate($customer);
         $this->constraintsViolationHandler->validate($errors);
         $this->entityManager->flush();
+
         return $customer;
     }
 }

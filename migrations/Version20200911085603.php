@@ -12,12 +12,12 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20200911085603 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE product_feature DROP FOREIGN KEY FK_8F95F95460E4B879');
@@ -26,7 +26,7 @@ final class Version20200911085603 extends AbstractMigration
         $this->addSql('ALTER TABLE product ADD length DOUBLE PRECISION NOT NULL, ADD width DOUBLE PRECISION NOT NULL, ADD height DOUBLE PRECISION NOT NULL, ADD wifi TINYINT(1) DEFAULT NULL, ADD video4k TINYINT(1) DEFAULT NULL, ADD bluetooth TINYINT(1) DEFAULT NULL, ADD lte4_g TINYINT(1) DEFAULT NULL, ADD camera TINYINT(1) DEFAULT NULL, ADD nfc TINYINT(1) DEFAULT NULL, DROP dimensions, CHANGE updated_at updated_at DATETIME DEFAULT NULL, CHANGE screen screen DOUBLE PRECISION NOT NULL');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE feature (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB COMMENT = \'\' ');

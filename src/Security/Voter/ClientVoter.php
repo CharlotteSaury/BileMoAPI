@@ -3,10 +3,10 @@
 namespace App\Security\Voter;
 
 use App\Entity\Client;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class ClientVoter extends Voter
 {
@@ -19,7 +19,7 @@ class ClientVoter extends Voter
     {
         $this->security = $security;
     }
-    
+
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ['MANAGE'])
@@ -55,5 +55,3 @@ class ClientVoter extends Voter
         return $client === $currentUser;
     }
 }
-
-

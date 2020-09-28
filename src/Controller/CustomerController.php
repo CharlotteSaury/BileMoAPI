@@ -4,18 +4,18 @@ namespace App\Controller;
 
 use App\Entity\Customer;
 use App\Service\CustomerService;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Request\ParamFetcherInterface;
-use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
-use Symfony\Component\Validator\ConstraintViolationList;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Request\ParamFetcherInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class CustomerController extends AbstractFOSRestController
 {
@@ -30,8 +30,8 @@ class CustomerController extends AbstractFOSRestController
     }
 
     /**
-     * List characteristics of specified customer
-     * 
+     * List characteristics of specified customer.
+     *
      * @Rest\Get(
      *      path = "/api/customers/{id}",
      *      name = "app_customers_show",
@@ -42,9 +42,9 @@ class CustomerController extends AbstractFOSRestController
      * )
      *
      * @Cache(maxage="3600", public=false, mustRevalidate=true)
-     * 
+     *
      * @IsGranted("MANAGE", subject="customer")
-     * 
+     *
      * @SWG\Get(
      *     description="List the characteristics of the specified customer (Restricted to admin and related client)",
      *     tags = {"Customer"},
@@ -87,8 +87,8 @@ class CustomerController extends AbstractFOSRestController
     }
 
     /**
-     * List customers associated to authenticated client
-     * 
+     * List customers associated to authenticated client.
+     *
      * @Rest\Get(
      *      path = "/api/customers",
      *      name = "app_customers_list"
@@ -106,9 +106,9 @@ class CustomerController extends AbstractFOSRestController
      *     default="10",
      *     description="Maximum number of products per page."
      * )
-     * 
+     *
      * @Cache(maxage="3600", public=false, mustRevalidate=true)
-     * 
+     *
      * @SWG\Get(
      *     description="List customers associated to authenticated client",
      *     tags = {"Customer"},
@@ -154,12 +154,12 @@ class CustomerController extends AbstractFOSRestController
      */
     public function listAction(ParamFetcherInterface $paramFetcher, Request $request)
     {
-        return $this->customerService->handleList($paramFetcher, $request, $this->getUser());;
+        return $this->customerService->handleList($paramFetcher, $request, $this->getUser());
     }
 
     /**
-     * Allow an authenticated client to create a new customer
-     * 
+     * Allow an authenticated client to create a new customer.
+     *
      * @Rest\Post(
      *      path = "/api/customers",
      *      name = "app_customers_create"
@@ -169,7 +169,7 @@ class CustomerController extends AbstractFOSRestController
      *      serializerGroups={"customer"}
      * )
      * @ParamConverter("customer", converter="fos_rest.request_body")
-     * 
+     *
      * @SWG\Post(
      *     description="Allow an authenticated client to create a new customer",
      *     tags = {"Customer"},
@@ -217,7 +217,7 @@ class CustomerController extends AbstractFOSRestController
     public function createAction(Customer $customer, ConstraintViolationList $violations)
     {
         $newCustomer = $this->customerService->handleCreate($customer, $violations, $this->getUser());
-        
+
         return $this->view(
             $newCustomer,
             Response::HTTP_CREATED,
@@ -226,8 +226,8 @@ class CustomerController extends AbstractFOSRestController
     }
 
     /**
-     * Allow an authenticated client to delete a customer
-     * 
+     * Allow an authenticated client to delete a customer.
+     *
      * @Rest\Delete(
      *      path = "/api/customers/{id}",
      *      name = "app_customers_delete",
@@ -236,7 +236,7 @@ class CustomerController extends AbstractFOSRestController
      * @Rest\View(
      *      StatusCode = Response::HTTP_NO_CONTENT
      * )
-     * 
+     *
      * @SWG\Delete(
      *     description="Allow an authenticated client to delete a customer",
      *     tags = {"Customer"},
@@ -281,8 +281,8 @@ class CustomerController extends AbstractFOSRestController
     }
 
     /**
-     * Update a customer
-     * 
+     * Update a customer.
+     *
      * @Rest\Put(
      *      path = "/api/customers/{id}",
      *      name = "app_customers_update",
@@ -292,9 +292,9 @@ class CustomerController extends AbstractFOSRestController
      *      serializerGroups={"customer"},
      *      StatusCode = 200
      * )
-     * 
+     *
      * @IsGranted("MANAGE", subject="customer")
-     * 
+     *
      * @SWG\Put(
      *     description="Partially or totally update a customer.",
      *     tags = {"Customer"},
@@ -342,6 +342,7 @@ class CustomerController extends AbstractFOSRestController
     public function updateAction(Customer $customer, Request $request)
     {
         $updatedCustomer = $this->customerService->handleUpdate($customer, $request);
+
         return $updatedCustomer;
     }
 }

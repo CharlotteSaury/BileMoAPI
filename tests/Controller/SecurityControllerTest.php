@@ -4,8 +4,8 @@ namespace App\Tests\Controller;
 
 use App\Tests\Utils\createAuthenticatedClient;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class SecurityControllerTest extends WebTestCase
 {
@@ -13,12 +13,13 @@ class SecurityControllerTest extends WebTestCase
     use createAuthenticatedClient;
 
     /**
-     * Test unauthorized access to unauthenticated users
-     * 
+     * Test unauthorized access to unauthenticated users.
+     *
      * @dataProvider provideAuthenticatedRequests
      *
      * @param string $method
      * @param string $url
+     *
      * @return void
      */
     public function testRequiresAuthenticationRequests($method, $url)
@@ -46,7 +47,7 @@ class SecurityControllerTest extends WebTestCase
     }
 
     /**
-     * Test authentication token obtention with valid credentials
+     * Test authentication token obtention with valid credentials.
      *
      * @return void
      */
@@ -54,27 +55,27 @@ class SecurityControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $this->loadFixtureFiles([
-            dirname(__DIR__).'/fixtures/clients.yaml'
+            dirname(__DIR__).'/fixtures/clients.yaml',
         ]);
         $client->request(
             'POST',
             '/api/login_check',
-            array(),
-            array(),
-            array('CONTENT_TYPE' => 'application/json'),
-            json_encode(array(
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
                 'username' => 'admin@bilemo.com',
-                'password' => 'password'
-            ))
+                'password' => 'password',
+            ])
         );
         $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
-        
+
         $token = json_decode($client->getResponse()->getContent(), true);
         $this->assertArrayHasKey('token', $token);
     }
 
     /**
-     * Test authentication token obtention with invalid credentials
+     * Test authentication token obtention with invalid credentials.
      *
      * @return void
      */
@@ -82,18 +83,18 @@ class SecurityControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $this->loadFixtureFiles([
-            dirname(__DIR__).'/fixtures/clients.yaml'
+            dirname(__DIR__).'/fixtures/clients.yaml',
         ]);
         $client->request(
             'POST',
             '/api/login_check',
-            array(),
-            array(),
-            array('CONTENT_TYPE' => 'application/json'),
-            json_encode(array(
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
                 'username' => 'admin@bilemo.com',
-                'password' => 'badpassword'
-            ))
+                'password' => 'badpassword',
+            ])
         );
         $this->assertEquals(Response::HTTP_UNAUTHORIZED, $client->getResponse()->getStatusCode());
     }

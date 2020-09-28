@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Client;
 use App\Entity\Customer;
-use App\Repository\AbstractRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

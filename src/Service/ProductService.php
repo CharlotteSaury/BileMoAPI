@@ -2,17 +2,15 @@
 
 namespace App\Service;
 
-use DateTime;
 use App\Entity\Product;
+use App\Handler\ConstraintsViolationHandler;
 use App\Handler\PaginationHandler;
 use App\Repository\ProductRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Handler\ConstraintsViolationHandler;
-use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Request\ParamFetcherInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class ProductService
 {
@@ -27,7 +25,7 @@ class ProductService
     private $paginationHandler;
 
     /**
-     * @var ConstraintsViolationHandler 
+     * @var ConstraintsViolationHandler
      */
     private $constraintsViolationHandler;
 
@@ -35,7 +33,6 @@ class ProductService
      * @var ProductRepository
      */
     private $productRepository;
-
 
     public function __construct(PaginationHandler $paginationHandler, EntityManagerInterface $entityManager, ProductRepository $productRepository, ConstraintsViolationHandler $constraintsViolationHandler)
     {
@@ -48,11 +45,12 @@ class ProductService
     public function handleList(ParamFetcherInterface $paramFetcher, Request $request)
     {
         $paginatedRepresentation = $this->paginationHandler->paginate(
-            'product', 
-            $paramFetcher->get('page'), 
-            $paramFetcher->get('limit'), 
+            'product',
+            $paramFetcher->get('page'),
+            $paramFetcher->get('limit'),
             $request->get('_route')
         );
+
         return $paginatedRepresentation;
     }
 
@@ -70,7 +68,7 @@ class ProductService
         $this->constraintsViolationHandler->validate($violations);
 
         $product->setCreatedAt(new DateTime());
-        if ($product->getConfigurations() != null) {
+        if (null != $product->getConfigurations()) {
             foreach ($product->getConfigurations() as $config) {
                 $config->setProduct($product);
                 foreach ($config->getImages() as $image) {

@@ -13,9 +13,7 @@ class ClientTest extends KernelTestCase
     use FixturesTrait;
 
     /**
-     * Create a valid entity for tests
-     *
-     * @return Client
+     * Create a valid entity for tests.
      */
     public function getEntity(): Client
     {
@@ -30,7 +28,7 @@ class ClientTest extends KernelTestCase
     }
 
     /**
-     * Assert valid entity is valid
+     * Assert valid entity is valid.
      *
      * @return void
      */
@@ -40,7 +38,7 @@ class ClientTest extends KernelTestCase
     }
 
     /**
-     * Assert invalid entity (email, company) in invalid
+     * Assert invalid entity (email, company) in invalid.
      *
      * @return void
      */
@@ -54,14 +52,14 @@ class ClientTest extends KernelTestCase
     }
 
     /**
-     * Assert client unicity with email
+     * Assert client unicity with email.
      *
      * @return void
      */
     public function testInvalidUniqueEmail()
     {
         $this->loadFixtureFiles([
-            dirname(__DIR__).'/fixtures/clients.yaml'
+            dirname(__DIR__).'/fixtures/clients.yaml',
         ]);
         $invalidClient = $this->getEntity()->setEmail('client1@email.com');
         $this->assertHasErrors($invalidClient, 1);

@@ -2,15 +2,13 @@
 
 namespace App\DataFixtures;
 
-use DateTime;
-use Faker\Factory;
 use App\Entity\Client;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ClientFixtures extends Fixture
-{    
+{
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -22,7 +20,7 @@ class ClientFixtures extends Fixture
     {
         $faker = \Faker\Factory::create('fr_FR');
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 20; ++$i) {
             $client = new Client();
             $client->setEmail($faker->companyEmail)
                 ->setCreatedAt($faker->dateTime())

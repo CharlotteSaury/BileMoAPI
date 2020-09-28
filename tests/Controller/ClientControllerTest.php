@@ -3,32 +3,32 @@
 namespace App\Tests\Controller;
 
 use App\Tests\Utils\CreateAuthenticatedClient;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class ClientControllerTest extends WebTestCase
 {
     use CreateAuthenticatedClient;
 
     /**
-     * Test denied access to admin restricted routes related to client managment
+     * Test denied access to admin restricted routes related to client managment.
      */
     public function testRestrictedRoutesClientByNotAdmin()
     {
         $routes = [
             'GET' => '/api/clients',
             'GET' => '/api/clients/2',
-            'DELETE' => '/api/clients/1'
+            'DELETE' => '/api/clients/1',
         ];
         $client = $this->createAuthenticatedClient();
         foreach ($routes as $method => $url) {
-             $client->request($method, $url);
-             $this->assertEquals(Response::HTTP_FORBIDDEN, $client->getResponse()->getStatusCode());
-        } 
+            $client->request($method, $url);
+            $this->assertEquals(Response::HTTP_FORBIDDEN, $client->getResponse()->getStatusCode());
+        }
     }
 
     /**
-     * Test Error 405 when method not allowed
+     * Test Error 405 when method not allowed.
      *
      * @return void
      */
@@ -36,17 +36,17 @@ class ClientControllerTest extends WebTestCase
     {
         $routes = [
             'DELETE' => '/api/clients',
-            'PUT' => '/api/clients'
+            'PUT' => '/api/clients',
         ];
         $client = $this->createAuthenticatedClient();
         foreach ($routes as $method => $url) {
-             $client->request($method, $url);
-             $this->assertEquals(Response::HTTP_METHOD_NOT_ALLOWED, $client->getResponse()->getStatusCode());
-        } 
+            $client->request($method, $url);
+            $this->assertEquals(Response::HTTP_METHOD_NOT_ALLOWED, $client->getResponse()->getStatusCode());
+        }
     }
 
     /**
-     * Test Client details request by authenticated admin
+     * Test Client details request by authenticated admin.
      *
      * @return void
      */
@@ -66,7 +66,7 @@ class ClientControllerTest extends WebTestCase
     }
 
     /**
-     * Test error 404 return when requesting non existing resource
+     * Test error 404 return when requesting non existing resource.
      *
      * @return void
      */
@@ -81,7 +81,7 @@ class ClientControllerTest extends WebTestCase
     }
 
     /**
-     * Test client list request by authenticated admin and presence of pagination information
+     * Test client list request by authenticated admin and presence of pagination information.
      *
      * @return void
      */
@@ -101,26 +101,27 @@ class ClientControllerTest extends WebTestCase
     }
 
     /**
-     * Handle post request for new client
+     * Handle post request for new client.
      *
-     * @param Array $data
-     * @return Object
+     * @return object
      */
-    public function postClientByAdmin(Array $data) {
+    public function postClientByAdmin(array $data)
+    {
         $client = $this->createAuthenticatedClient('admin@bilemo.com', 'password');
         $client->request(
             'POST',
             '/api/clients',
-            array(),
-            array(),
-            array('CONTENT_TYPE' => 'application/json'),
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
             json_encode($data)
         );
+
         return $client;
     }
 
     /**
-     * Test new client creation request with valid data
+     * Test new client creation request with valid data.
      *
      * @return void
      */
@@ -129,7 +130,7 @@ class ClientControllerTest extends WebTestCase
         $data = [
             'email' => 'email@email.com',
             'company' => 'companyTest',
-            'password' => 'temporarypass'
+            'password' => 'temporarypass',
         ];
         $client = $this->postClientByAdmin($data);
         $this->assertSame(Response::HTTP_CREATED, $client->getResponse()->getStatusCode());
@@ -141,7 +142,7 @@ class ClientControllerTest extends WebTestCase
     }
 
     /**
-     * Test new client request with invalid data
+     * Test new client request with invalid data.
      *
      * @return void
      */
@@ -149,14 +150,14 @@ class ClientControllerTest extends WebTestCase
     {
         $data = [
             'email' => '',
-            'company' => 'co'
+            'company' => 'co',
         ];
         $client = $this->postClientByAdmin($data);
         $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
     }
 
     /**
-     * Test existing client deletion by authenticated admin
+     * Test existing client deletion by authenticated admin.
      *
      * @return void
      */
@@ -171,7 +172,7 @@ class ClientControllerTest extends WebTestCase
     }
 
     /**
-     * Test unknown client deletion by authenticated admin
+     * Test unknown client deletion by authenticated admin.
      *
      * @return void
      */
@@ -186,10 +187,11 @@ class ClientControllerTest extends WebTestCase
     }
 
     /**
-     * Handle client update request by authenticated admin
+     * Handle client update request by authenticated admin.
      *
-     * @param Array $data
-     * @return Object
+     * @param array $data
+     *
+     * @return object
      */
     public function updateClientByAdmin(string $email)
     {
@@ -197,18 +199,19 @@ class ClientControllerTest extends WebTestCase
         $client->request(
             'PUT',
             '/api/clients/1',
-            array(),
-            array(),
-            array('CONTENT_TYPE' => 'application/json'),
-            json_encode(array(
-                'email' => $email
-            ))
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                'email' => $email,
+            ])
         );
+
         return $client;
     }
-    
+
     /**
-     * Test client update request with valid data
+     * Test client update request with valid data.
      *
      * @return void
      */
@@ -225,7 +228,7 @@ class ClientControllerTest extends WebTestCase
     }
 
     /**
-     * Test client update request with invalid data
+     * Test client update request with invalid data.
      *
      * @return void
      */
@@ -234,6 +237,4 @@ class ClientControllerTest extends WebTestCase
         $client = $this->updateClientByAdmin('admin@bilemo.com');
         $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
     }
-
-    
 }

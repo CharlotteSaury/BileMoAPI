@@ -13,9 +13,7 @@ class ProductTest extends KernelTestCase
     use FixturesTrait;
 
     /**
-     * Create a valid entity for tests
-     *
-     * @return Product
+     * Create a valid entity for tests.
      */
     public function getEntity(): Product
     {
@@ -45,7 +43,7 @@ class ProductTest extends KernelTestCase
     }
 
     /**
-     * Assert valid entity is valid
+     * Assert valid entity is valid.
      *
      * @return void
      */
@@ -55,7 +53,7 @@ class ProductTest extends KernelTestCase
     }
 
     /**
-     * Assert invalid entity (email, firstName, lastName) in invalid
+     * Assert invalid entity (email, firstName, lastName) in invalid.
      *
      * @return void
      */
@@ -79,7 +77,7 @@ class ProductTest extends KernelTestCase
     }
 
     /**
-     * Assert product unicity with email
+     * Assert product unicity with email.
      *
      * @return void
      */

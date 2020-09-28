@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ImageRepository;
-use JMS\Serializer\Annotation\Since;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Since;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -25,12 +25,12 @@ class Image
 
     /**
      * @ORM\Column(type="string", length=255)
-     * 
+     *
      * @Assert\Url
-     * 
+     *
      * @Expose
      * @Groups({"product", "products_list"})
-     * 
+     *
      * @Since("1.0")
      */
     private $url;
@@ -38,7 +38,7 @@ class Image
     /**
      * @ORM\ManyToOne(targetEntity=Configuration::class, inversedBy="images")
      * @ORM\JoinColumn(nullable=false)
-     * 
+     *
      * @Since("1.0")
      */
     private $configuration;

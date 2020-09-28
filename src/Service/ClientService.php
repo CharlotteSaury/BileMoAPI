@@ -2,20 +2,20 @@
 
 namespace App\Service;
 
-use DateTime;
 use App\Entity\Client;
+use App\Handler\ConstraintsViolationHandler;
 use App\Handler\PaginationHandler;
 use App\Repository\ClientRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Handler\ConstraintsViolationHandler;
-use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Request\ParamFetcherInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ClientService
 {
@@ -30,7 +30,7 @@ class ClientService
     private $paginationHandler;
 
     /**
-     * @var ConstraintsViolationHandler 
+     * @var ConstraintsViolationHandler
      */
     private $constraintsViolationHandler;
 
@@ -67,6 +67,7 @@ class ClientService
             $paramFetcher->get('limit'),
             $request->get('_route')
         );
+
         return $paginatedRepresentation;
     }
 
@@ -82,13 +83,14 @@ class ClientService
     public function handleCreate(Client $client, ConstraintViolationList $violations)
     {
         $this->constraintsViolationHandler->validate($violations);
-        
+
         $client->setRoles(['ROLE_USER']);
         $client->setCreatedAt(new DateTime());
         $hashedPassword = $this->encoder->encodePassword($client, $client->getPassword());
         $client->setPassword($hashedPassword);
         $this->entityManager->persist($client);
         $this->entityManager->flush();
+
         return $client;
     }
 
@@ -97,26 +99,27 @@ class ClientService
         $data = json_decode($request->getContent());
         foreach ($data as $key => $value) {
             if (in_array($key, Client::ATTRIBUTES)) {
-                $setter = 'set' . ucfirst($key);
+                $setter = 'set'.ucfirst($key);
                 $client->$setter($value);
             } else {
                 throw new AccessDeniedHttpException();
             }
         }
         $errors = $this->validator->validate($client);
-        for ($i = 0; $i < $errors->count(); $i++) {
-            if ($errors->get($i)->getPropertyPath() === 'password') {
+        for ($i = 0; $i < $errors->count(); ++$i) {
+            if ('password' === $errors->get($i)->getPropertyPath()) {
                 $errors->remove($i);
             }
         }
         $this->constraintsViolationHandler->validate($errors);
         $this->entityManager->flush();
+
         return $client;
     }
 
     public function handlePasswordUpdate(Client $client, Request $request)
     {
-        $passwordConstraint = new Assert\Length(["min" => 6, "max" => 30]);
+        $passwordConstraint = new Assert\Length(['min' => 6, 'max' => 30]);
         $data = json_decode($request->getContent(), true);
 
         if (array_key_exists('password', $data)) {
@@ -130,6 +133,7 @@ class ClientService
             $client->setPassword($hashedPassword);
 
             $this->entityManager->flush();
+
             return $client;
         } else {
             throw new BadRequestException('Field password is missing.');

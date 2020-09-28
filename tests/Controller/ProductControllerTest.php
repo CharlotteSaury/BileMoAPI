@@ -3,15 +3,15 @@
 namespace App\Tests\Controller;
 
 use App\Tests\Utils\CreateAuthenticatedClient;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductControllerTest extends WebTestCase
 {
     use CreateAuthenticatedClient;
 
     /**
-     * Test Error 405 when method not allowed
+     * Test Error 405 when method not allowed.
      *
      * @return void
      */
@@ -19,17 +19,17 @@ class ProductControllerTest extends WebTestCase
     {
         $routes = [
             'DELETE' => '/api/products',
-            'PUT' => '/api/products'
+            'PUT' => '/api/products',
         ];
         $client = $this->createAuthenticatedClient();
         foreach ($routes as $method => $url) {
-             $client->request($method, $url);
-             $this->assertEquals(Response::HTTP_METHOD_NOT_ALLOWED, $client->getResponse()->getStatusCode());
-        } 
+            $client->request($method, $url);
+            $this->assertEquals(Response::HTTP_METHOD_NOT_ALLOWED, $client->getResponse()->getStatusCode());
+        }
     }
 
     /**
-     * Test products list request by authenticated client and presence of pagination information
+     * Test products list request by authenticated client and presence of pagination information.
      *
      * @return void
      */
@@ -49,7 +49,7 @@ class ProductControllerTest extends WebTestCase
     }
 
     /**
-     * Test related product details request by authenticated client
+     * Test related product details request by authenticated client.
      *
      * @return void
      */
@@ -69,7 +69,7 @@ class ProductControllerTest extends WebTestCase
     }
 
     /**
-     * Test error 404 return when requesting non existing resource
+     * Test error 404 return when requesting non existing resource.
      *
      * @return void
      */
@@ -83,61 +83,59 @@ class ProductControllerTest extends WebTestCase
         $this->assertSame(Response::HTTP_NOT_FOUND, $client->getResponse()->getStatusCode());
     }
 
-    
-
     /**
-     * Handle post request for new product
+     * Handle post request for new product.
      *
-     * @param Array $data
-     * @return Object
+     * @return object
      */
-    public function postProduct(Array $data) {
+    public function postProduct(array $data)
+    {
         $client = $this->createAuthenticatedClient('admin@bilemo.com', 'password');
         $client->request(
             'POST',
             '/api/products',
-            array(),
-            array(),
-            array('CONTENT_TYPE' => 'application/json'),
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
             json_encode($data)
         );
-        
+
         return $client;
     }
 
     /**
-     * Test new product creation request with valid data
+     * Test new product creation request with valid data.
      *
      * @return void
      */
     public function testValidDataPostProduct()
     {
         $data = [
-            "name" => "quas",
-            "description" => "Illum deleniti et iure ut. Eos est tempora aperiam labore enim quo. Quasi ducimus aut et omnis cupiditate voluptatem praesentium.",
-            "manufacturer" => "Huawei",
-            "screen" => 4.4,
-            "das" => 0.837,
-            "weight" => 186.1,
-            "length" => 14.76,
-            "width" => 6.57,
-            "height" => 0.76,
-            "wifi" => true,
-            "video4k" => true,
-            "bluetooth" => false,
-            "camera" => false,
-            "configurations" => [
+            'name' => 'quas',
+            'description' => 'Illum deleniti et iure ut. Eos est tempora aperiam labore enim quo. Quasi ducimus aut et omnis cupiditate voluptatem praesentium.',
+            'manufacturer' => 'Huawei',
+            'screen' => 4.4,
+            'das' => 0.837,
+            'weight' => 186.1,
+            'length' => 14.76,
+            'width' => 6.57,
+            'height' => 0.76,
+            'wifi' => true,
+            'video4k' => true,
+            'bluetooth' => false,
+            'camera' => false,
+            'configurations' => [
                 [
-                "memory" => 64,
-                "color" => "lime",
-                "price" => 1424.48,
-                "images" => [
+                'memory' => 64,
+                'color' => 'lime',
+                'price' => 1424.48,
+                'images' => [
                         [
-                            "url" => "http://www.rodrigues.net/occaecati-ipsum-molestiae-natus-rerum-rem-necessitatibus"
-                        ]                        
-                    ]
-                ]
-            ]
+                            'url' => 'http://www.rodrigues.net/occaecati-ipsum-molestiae-natus-rerum-rem-necessitatibus',
+                        ],
+                    ],
+                ],
+            ],
         ];
         $client = $this->postProduct($data);
         $this->assertSame(Response::HTTP_CREATED, $client->getResponse()->getStatusCode());
@@ -149,66 +147,66 @@ class ProductControllerTest extends WebTestCase
     }
 
     /**
-     * Test new product request with invalid data
+     * Test new product request with invalid data.
      *
      * @return void
      */
     public function testInvaliDataPostProduct()
     {
         $data = [
-            "name" => "phonezefze",
-            "description" => "I",
-            "manufacturer" => "",
-            "screen" => 4.4,
-            "das" => 0.837,
-            "weight" => 186.1,
-            "length" => 14.76,
-            "configurations" => []
+            'name' => 'phonezefze',
+            'description' => 'I',
+            'manufacturer' => '',
+            'screen' => 4.4,
+            'das' => 0.837,
+            'weight' => 186.1,
+            'length' => 14.76,
+            'configurations' => [],
         ];
         $client = $this->postProduct($data);
         $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
     }
 
     /**
-     * Test new product request with already existing product
+     * Test new product request with already existing product.
      *
      * @return void
      */
     public function testAlreadyExistingPostProduct()
     {
         $data = [
-            "name" => "phone1",
-            "description" => "Illum deleniti et iure ut. Eos est tempora aperiam labore enim quo. Quasi ducimus aut et omnis cupiditate voluptatem praesentium.",
-            "manufacturer" => "Huawei",
-            "screen" => 4.4,
-            "das" => 0.837,
-            "weight" => 186.1,
-            "length" => 14.76,
-            "width" => 6.57,
-            "height" => 0.76,
-            "wifi" => true,
-            "video4k" => true,
-            "bluetooth" => false,
-            "camera" => false,
-            "configurations" => [
+            'name' => 'phone1',
+            'description' => 'Illum deleniti et iure ut. Eos est tempora aperiam labore enim quo. Quasi ducimus aut et omnis cupiditate voluptatem praesentium.',
+            'manufacturer' => 'Huawei',
+            'screen' => 4.4,
+            'das' => 0.837,
+            'weight' => 186.1,
+            'length' => 14.76,
+            'width' => 6.57,
+            'height' => 0.76,
+            'wifi' => true,
+            'video4k' => true,
+            'bluetooth' => false,
+            'camera' => false,
+            'configurations' => [
                 [
-                "memory" => 64,
-                "color" => "lime",
-                "price" => 1424.48,
-                "images" => [
+                'memory' => 64,
+                'color' => 'lime',
+                'price' => 1424.48,
+                'images' => [
                         [
-                            "url" => "http://www.rodrigues.net/occaecati-ipsum-molestiae-natus-rerum-rem-necessitatibus"
-                        ]                        
-                    ]
-                ]
-            ]
+                            'url' => 'http://www.rodrigues.net/occaecati-ipsum-molestiae-natus-rerum-rem-necessitatibus',
+                        ],
+                    ],
+                ],
+            ],
         ];
         $client = $this->postProduct($data);
         $this->assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
     }
 
     /**
-     * Test product deletion by authenticated client not granted admin
+     * Test product deletion by authenticated client not granted admin.
      *
      * @return void
      */
@@ -223,7 +221,7 @@ class ProductControllerTest extends WebTestCase
     }
 
     /**
-     * Test product deletion by admin
+     * Test product deletion by admin.
      *
      * @return void
      */
@@ -238,7 +236,7 @@ class ProductControllerTest extends WebTestCase
     }
 
     /**
-     * Test unknown product deletion by admin
+     * Test unknown product deletion by admin.
      *
      * @return void
      */
@@ -250,5 +248,5 @@ class ProductControllerTest extends WebTestCase
             '/api/products/300'
         );
         $this->assertSame(Response::HTTP_NO_CONTENT, $client->getResponse()->getStatusCode());
-    }    
+    }
 }

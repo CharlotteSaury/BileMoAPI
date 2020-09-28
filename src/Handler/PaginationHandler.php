@@ -4,10 +4,10 @@ namespace App\Handler;
 
 use App\Entity\Client;
 use App\Repository\ClientRepository;
-use App\Repository\ProductRepository;
 use App\Repository\CustomerRepository;
-use JMS\Serializer\SerializerInterface;
+use App\Repository\ProductRepository;
 use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class PaginationHandler
@@ -40,7 +40,7 @@ class PaginationHandler
         $this->customerRepository = $customerRepository;
     }
 
-    public function paginate(string $type, int $page, int  $limit, string $route, Client $user = null)
+    public function paginate(string $type, int $page, int $limit, string $route, Client $user = null)
     {
         $repository = $type.'Repository';
         $paginatedRepresentation = $this->$repository->search(
@@ -50,13 +50,14 @@ class PaginationHandler
             $user
         );
         $data = $this->serializer->serialize(
-            $paginatedRepresentation, 
-            'json', 
+            $paginatedRepresentation,
+            'json',
             SerializationContext::create()->setGroups(['Default', $type.'s_list'])
         );
 
         $response = new Response($data);
         $response->headers->set('Content-Type', 'application/json');
+
         return $response;
     }
 }
