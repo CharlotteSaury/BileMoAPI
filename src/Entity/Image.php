@@ -20,6 +20,8 @@ class Image
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
+     * @var Int
      */
     private $id;
 
@@ -32,6 +34,8 @@ class Image
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $url;
 
@@ -40,6 +44,8 @@ class Image
      * @ORM\JoinColumn(nullable=false)
      *
      * @Since("1.0")
+     * 
+     * @var Configuration
      */
     private $configuration;
 

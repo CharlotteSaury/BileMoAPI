@@ -27,7 +27,7 @@ class CustomerVoter extends Voter
             && $subject instanceof \App\Entity\Customer;
     }
 
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token)
     {
         $client = $token->getUser();
         // if the user is anonymous, do not grant access
@@ -42,16 +42,19 @@ class CustomerVoter extends Voter
         /** @var Customer $customer */
         $customer = $subject;
 
-        switch ($attribute) {
-            case 'MANAGE':
-                return $this->canManage($subject, $client);
-                break;
+        if ($attribute == 'MANAGE') {
+            return $this->canManage($subject, $client);
         }
 
         return false;
     }
 
-    public function canManage(Customer $customer, Client $client)
+    /**
+     * @param Customer $customer
+     * @param UserInterface $client
+     * @return boolean
+     */
+    public function canManage(Customer $customer, UserInterface $client)
     {
         return $customer->getClients()->contains($client);
     }

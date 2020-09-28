@@ -10,10 +10,16 @@ use Doctrine\Persistence\ObjectManager;
 
 class ProductFixtures extends Fixture
 {
+    /**
+     * Load product fixtures to database
+     *
+     * @param ObjectManager $manager
+     * @return void
+     */
     public function load(ObjectManager $manager)
     {
         $faker = \Faker\Factory::create('fr_FR');
-        $date = $faker->DateTime();
+        $date = $faker->dateTime();
         $memory = [
             '32',
             '64',

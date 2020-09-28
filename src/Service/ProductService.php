@@ -2,14 +2,15 @@
 
 namespace App\Service;
 
+use DateTime;
 use App\Entity\Product;
-use App\Handler\ConstraintsViolationHandler;
 use App\Handler\PaginationHandler;
 use App\Repository\ProductRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Request\ParamFetcherInterface;
+use App\Handler\ConstraintsViolationHandler;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 
 class ProductService
@@ -42,6 +43,13 @@ class ProductService
         $this->constraintsViolationHandler = $constraintsViolationHandler;
     }
 
+    /**
+     * Handle product list pagination
+     *
+     * @param ParamFetcherInterface $paramFetcher
+     * @param Request $request
+     * @return Response
+     */
     public function handleList(ParamFetcherInterface $paramFetcher, Request $request)
     {
         $paginatedRepresentation = $this->paginationHandler->paginate(
@@ -54,6 +62,12 @@ class ProductService
         return $paginatedRepresentation;
     }
 
+    /**
+     * Handle product deletion
+     *
+     * @param Request $request
+     * @return void
+     */
     public function handleDelete(Request $request)
     {
         $product = $this->productRepository->findOneBy(['id' => $request->get('id')]);
@@ -63,6 +77,13 @@ class ProductService
         }
     }
 
+    /**
+     * Handle product creation 
+     *
+     * @param Product $product
+     * @param ConstraintViolationList $violations
+     * @return Product $product
+     */
     public function handleCreate(Product $product, ConstraintViolationList $violations)
     {
         $this->constraintsViolationHandler->validate($violations);

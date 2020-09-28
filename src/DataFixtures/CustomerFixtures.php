@@ -9,6 +9,12 @@ use Doctrine\Persistence\ObjectManager;
 
 class CustomerFixtures extends Fixture implements DependentFixtureInterface
 {
+    /**
+     * Load customers fixtures to database
+     *
+     * @param ObjectManager $manager
+     * @return void
+     */
     public function load(ObjectManager $manager)
     {
         $faker = \Faker\Factory::create('fr_FR');

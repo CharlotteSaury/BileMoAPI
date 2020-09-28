@@ -77,6 +77,8 @@ class Client implements UserInterface
      * @Groups({"customer", "client", "clients_list"})
      *
      * @Since("1.0")
+     * 
+     * @var Int
      */
     private $id;
 
@@ -91,6 +93,8 @@ class Client implements UserInterface
      * @SWG\Property(description="Email address of client")
      *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $email;
 
@@ -110,6 +114,8 @@ class Client implements UserInterface
      * @SWG\Property(description="Password of client")
      *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $password;
 
@@ -121,6 +127,8 @@ class Client implements UserInterface
      * @SWG\Property(description="Client's creation date")
      *
      * @Since("1.0")
+     * 
+     * @var DateTime
      */
     private $createdAt;
 
@@ -131,8 +139,10 @@ class Client implements UserInterface
      * @SWG\Property(description="Client's role")
      *
      * @Since("1.0")
+     * 
+     * @var ArrayCollection
      */
-    private $roles = [];
+    private $roles;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -151,6 +161,8 @@ class Client implements UserInterface
      * @SWG\Property(description="Client's company name")
      *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $company;
 
@@ -163,6 +175,8 @@ class Client implements UserInterface
      * @SWG\Property(description="Client's related customers")
      *
      * @Since("1.0")
+     * 
+     * @var ArrayCollection
      */
     private $customers;
 
@@ -288,6 +302,8 @@ class Client implements UserInterface
      *
      * This is important if, at any given point, sensitive information like
      * the plain-text password is stored on this object.
+     * 
+     * @return void
      */
     public function eraseCredentials()
     {

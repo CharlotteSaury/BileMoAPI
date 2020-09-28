@@ -72,6 +72,8 @@ class Customer
      * @ORM\Column(type="integer")
      * @Expose
      * @Groups({"customer", "customers_list", "client"})
+     * 
+     * @var Int
      */
     private $id;
 
@@ -85,6 +87,8 @@ class Customer
      * @Groups({"customer", "customers_list", "client"})
      *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $email;
 
@@ -101,6 +105,8 @@ class Customer
      * @Groups({"customer", "customers_list", "client"})
      *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $firstname;
 
@@ -117,6 +123,8 @@ class Customer
      * @Groups({"customer", "customers_list", "client"})
      *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $lastname;
 
@@ -126,6 +134,8 @@ class Customer
      * @Groups({"customer", "customers_list", "client"})
      *
      * @Since("1.0")
+     * 
+     * @var DateTimeInterface
      */
     private $createdAt;
 
@@ -134,6 +144,8 @@ class Customer
      * @Groups({"customer", "customers_list", "client"})
      *
      * @Since("1.0")
+     * 
+     * @var ArrayCollection
      */
     private $clients;
 

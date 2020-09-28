@@ -80,6 +80,10 @@ class CustomerController extends AbstractFOSRestController
      *          description="Bearer JWT Token",
      *     )
      * )
+     * 
+     * @return Response
+     * 
+     * @return Response
      */
     public function showAction(Customer $customer)
     {
@@ -151,6 +155,8 @@ class CustomerController extends AbstractFOSRestController
      *          description="Bearer Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function listAction(ParamFetcherInterface $paramFetcher, Request $request)
     {
@@ -213,6 +219,8 @@ class CustomerController extends AbstractFOSRestController
      *          description="Bearer JWT Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function createAction(Customer $customer, ConstraintViolationList $violations)
     {
@@ -274,6 +282,8 @@ class CustomerController extends AbstractFOSRestController
      *          description="Bearer JWT Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function deleteAction(Request $request)
     {
@@ -338,6 +348,8 @@ class CustomerController extends AbstractFOSRestController
      *          description="Bearer JWT Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function updateAction(Customer $customer, Request $request)
     {

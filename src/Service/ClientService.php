@@ -2,20 +2,21 @@
 
 namespace App\Service;
 
+use DateTime;
 use App\Entity\Client;
-use App\Handler\ConstraintsViolationHandler;
 use App\Handler\PaginationHandler;
 use App\Repository\ClientRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Request\ParamFetcherInterface;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use App\Handler\ConstraintsViolationHandler;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ClientService
 {
@@ -59,6 +60,13 @@ class ClientService
         $this->validator = $validator;
     }
 
+    /**
+     * Manage paginated client list
+     *
+     * @param ParamFetcherInterface $paramFetcher
+     * @param Request $request
+     * @return Response
+     */
     public function handleList(ParamFetcherInterface $paramFetcher, Request $request)
     {
         $paginatedRepresentation = $this->paginationHandler->paginate(
@@ -67,10 +75,15 @@ class ClientService
             $paramFetcher->get('limit'),
             $request->get('_route')
         );
-
         return $paginatedRepresentation;
     }
 
+    /**
+     * Handle client deletion
+     *
+     * @param Request $request
+     * @return void
+     */
     public function handleDelete(Request $request)
     {
         $client = $this->clientRepository->findOneBy(['id' => $request->get('id')]);
@@ -80,6 +93,13 @@ class ClientService
         }
     }
 
+    /**
+     * Handle client creation
+     *
+     * @param Client $client
+     * @param ConstraintViolationList $violations
+     * @return Client $client
+     */
     public function handleCreate(Client $client, ConstraintViolationList $violations)
     {
         $this->constraintsViolationHandler->validate($violations);
@@ -94,6 +114,13 @@ class ClientService
         return $client;
     }
 
+    /**
+     * Handle client update
+     *
+     * @param Client $client
+     * @param Request $request
+     * @return Client $client
+     */
     public function handleUpdate(Client $client, Request $request)
     {
         $data = json_decode($request->getContent());
@@ -117,6 +144,13 @@ class ClientService
         return $client;
     }
 
+    /**
+     * Handle client password update
+     *
+     * @param Client $client
+     * @param Request $request
+     * @return Client $client
+     */
     public function handlePasswordUpdate(Client $client, Request $request)
     {
         $passwordConstraint = new Assert\Length(['min' => 6, 'max' => 30]);

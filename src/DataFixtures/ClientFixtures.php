@@ -9,6 +9,9 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ClientFixtures extends Fixture
 {
+    /**
+     * @var UserPasswordEncoderInterface
+     */
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -16,6 +19,12 @@ class ClientFixtures extends Fixture
         $this->encoder = $encoder;
     }
 
+    /**
+     * Load client fixtures to database
+     *
+     * @param ObjectManager $manager
+     * @return void
+     */
     public function load(ObjectManager $manager)
     {
         $faker = \Faker\Factory::create('fr_FR');
@@ -46,7 +55,7 @@ class ClientFixtures extends Fixture
         $admin->setEmail('admin@bilemo.com')
                 ->setCreatedAt(new \DateTime())
                 ->setCompany('BileMo')
-                ->setPassword($this->encoder->encodePassword($client, 'admin'))
+                ->setPassword($this->encoder->encodePassword($admin, 'admin'))
                 ->setRoles(['ROLE_ADMIN']);
 
         $manager->persist($admin);

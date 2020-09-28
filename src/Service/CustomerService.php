@@ -2,20 +2,21 @@
 
 namespace App\Service;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\Customer;
-use App\Exception\ResourceValidationException;
-use App\Handler\ConstraintsViolationHandler;
 use App\Handler\PaginationHandler;
 use App\Repository\CustomerRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Request\ParamFetcherInterface;
+use App\Handler\ConstraintsViolationHandler;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Security;
+use App\Exception\ResourceValidationException;
+use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class CustomerService
 {
@@ -59,6 +60,14 @@ class CustomerService
         $this->validator = $validator;
     }
 
+    /**
+     * Handle customer list pagination
+     *
+     * @param ParamFetcherInterface $paramFetcher
+     * @param Request $request
+     * @param Client $client
+     * @return Response
+     */
     public function handleList(ParamFetcherInterface $paramFetcher, Request $request, Client $client)
     {
         $paginatedRepresentation = $this->paginationHandler->paginate(
@@ -72,6 +81,13 @@ class CustomerService
         return $paginatedRepresentation;
     }
 
+    /**
+     * Handle customer deletion by related client or admin
+     *
+     * @param Request $request
+     * @param Client $client
+     * @return void
+     */
     public function handleDelete(Request $request, Client $client)
     {
         $customer = $this->customerRepository->findOneBy(['id' => $request->get('id')]);
@@ -88,6 +104,14 @@ class CustomerService
         }
     }
 
+    /**
+     * Handle customer deletion
+     *
+     * @param Customer $customer
+     * @param ConstraintViolationList $violations
+     * @param Client $client
+     * @return Customer $customer
+     */
     public function handleCreate(Customer $customer, ConstraintViolationList $violations, Client $client)
     {
         $existingCustomer = $this->customerRepository->findOneBy(['email' => $customer->getEmail()]);
@@ -109,6 +133,13 @@ class CustomerService
         return $existingCustomer;
     }
 
+    /**
+     * Handle customer update
+     *
+     * @param Customer $customer
+     * @param Request $request
+     * @return Customer $customer
+     */
     public function handleUpdate(Customer $customer, Request $request)
     {
         $data = json_decode($request->getContent());

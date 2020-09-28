@@ -22,6 +22,8 @@ class Configuration
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
+     * @var Int
      */
     private $id;
 
@@ -40,6 +42,8 @@ class Configuration
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var Int
      */
     private $memory;
 
@@ -59,6 +63,8 @@ class Configuration
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $color;
 
@@ -81,6 +87,8 @@ class Configuration
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var Float
      */
     private $price;
 
@@ -91,6 +99,8 @@ class Configuration
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var Product
      */
     private $product;
 
@@ -102,6 +112,8 @@ class Configuration
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var ArrayCollection
      */
     private $images;
 
@@ -115,12 +127,12 @@ class Configuration
         return $this->id;
     }
 
-    public function getMemory(): ?string
+    public function getMemory(): ?int
     {
         return $this->memory;
     }
 
-    public function setMemory(string $memory): self
+    public function setMemory(int $memory): self
     {
         $this->memory = $memory;
 

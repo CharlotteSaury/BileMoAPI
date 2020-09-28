@@ -78,6 +78,8 @@ class ProductController extends AbstractFOSRestController
      *          description="Bearer JWT Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function showAction(Product $product)
     {
@@ -152,6 +154,8 @@ class ProductController extends AbstractFOSRestController
      *          description="Bearer Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function listAction(ParamFetcherInterface $paramFetcher, Request $request)
     {
@@ -208,6 +212,8 @@ class ProductController extends AbstractFOSRestController
      *          description="Bearer JWT Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function deleteAction(Request $request)
     {
@@ -305,6 +311,8 @@ class ProductController extends AbstractFOSRestController
      *          description="Bearer JWT Token",
      *     )
      * )
+     * 
+     * @return Response
      */
     public function createAction(Product $product, ConstraintViolationList $violations)
     {

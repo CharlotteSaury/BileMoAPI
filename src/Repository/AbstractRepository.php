@@ -10,6 +10,15 @@ use Pagerfanta\Pagerfanta;
 
 abstract class AbstractRepository extends ServiceEntityRepository
 {
+    /**
+     * Manage entity list pagination
+     *
+     * @param array $data
+     * @param integer $page
+     * @param integer $limit
+     * @param string $route
+     * @return PaginatedRepresentation
+     */
     protected function paginate(array $data, int $page, int $limit, string $route)
     {
         if (0 >= $page || 0 >= $limit) {

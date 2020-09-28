@@ -70,6 +70,8 @@ class Product
      * @ORM\Column(type="integer")
      * @Expose
      * @Groups({"product", "products_list"})
+     * 
+     * @var Int
      */
     private $id;
 
@@ -88,6 +90,8 @@ class Product
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $name;
 
@@ -106,6 +110,8 @@ class Product
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $description;
 
@@ -124,6 +130,8 @@ class Product
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var String
      */
     private $manufacturer;
 
@@ -133,6 +141,8 @@ class Product
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var DateTime
      */
     private $createdAt;
 
@@ -154,6 +164,8 @@ class Product
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var Float
      */
     private $screen;
 
@@ -174,6 +186,8 @@ class Product
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var Float
      */
     private $das;
 
@@ -195,6 +209,8 @@ class Product
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var Float
      */
     private $weight;
 
@@ -216,6 +232,8 @@ class Product
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var Float
      */
     private $length;
 
@@ -237,6 +255,8 @@ class Product
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var Float
      */
     private $width;
 
@@ -258,6 +278,8 @@ class Product
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var Float
      */
     private $height;
 
@@ -274,6 +296,8 @@ class Product
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var Bool
      */
     private $wifi;
 
@@ -290,6 +314,8 @@ class Product
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var Bool
      */
     private $video4k;
 
@@ -306,6 +332,8 @@ class Product
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var Bool
      */
     private $bluetooth;
 
@@ -322,6 +350,8 @@ class Product
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var Bool
      */
     private $camera;
 
@@ -339,6 +369,8 @@ class Product
      * @Groups({"product", "products_list"})
      *
      * @Since("1.0")
+     * 
+     * @var ArrayCollection
      */
     private $configurations;
 
@@ -389,12 +421,12 @@ class Product
         return $this;
     }
 
-    public function getScreen(): ?string
+    public function getScreen(): ?float
     {
         return $this->screen;
     }
 
-    public function setScreen(string $screen): self
+    public function setScreen(float $screen): self
     {
         $this->screen = $screen;
 
