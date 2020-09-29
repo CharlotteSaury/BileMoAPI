@@ -24,7 +24,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
                 ->setCreatedAt($faker->dateTime())
                 ->setFirstname($faker->firstName)
                 ->setLastname($faker->lastName);
-            for ($j = 1; $j < mt_rand(1, 3); ++$j) {
+            for ($j = 1; $j < mt_rand(2, 3); ++$j) {
                 $customer->addClient($this->getReference('client'.mt_rand(0, 19)));
             }
 
