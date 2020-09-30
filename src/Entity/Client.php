@@ -65,6 +65,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      ),
  *      exclusion = @Hateoas\Exclusion(groups = {"client", "clients_list"})
  * )
+ * @Hateoas\Relation(
+ *      "customers",
+ *      embedded = @Hateoas\Embedded("expr(object.getCustomers())"),
+ *      exclusion = @Hateoas\Exclusion(
+ *          groups = {"client"},
+ *          excludeIf = "expr(not is_granted('ROLE_ADMIN'))"
+ *      )
+ * )
  */
 class Client implements UserInterface
 {
@@ -140,7 +148,7 @@ class Client implements UserInterface
      *
      * @Since("1.0")
      * 
-     * @var ArrayCollection
+     * @var Array
      */
     private $roles;
 
@@ -169,8 +177,6 @@ class Client implements UserInterface
     /**
      * @ORM\ManyToMany(targetEntity=Customer::class, inversedBy="clients")
      *
-     * @Expose
-     * @Groups({"client"})
      *
      * @SWG\Property(description="Client's related customers")
      *

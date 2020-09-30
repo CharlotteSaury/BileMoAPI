@@ -41,7 +41,7 @@ class SecurityController extends AbstractFOSRestController
      *          description="Client username and password",
      *          @SWG\Schema(
      *              type="array",
-     *              example={"username": "user@user.fr", "password": "pass"},
+     *              example={"username": "user@bilemo.com", "password": "user"},
      *              @SWG\Items()
      *          )
      *     )
